@@ -1,13 +1,13 @@
 #Markov Sentence Generator 
 #By Lachlan Page
-
 import random 
 
 file_string = ""
 with open("book.txt", 'r') as content_file:
     file_string = content_file.read()
 file_string = file_string.split()
-file_string = file_string[:1000]
+#Only a subset of text need to optimize to quicken results
+file_string = file_string[:10000]
 
 #full stop in dictionary to handle end cases
 chain = {}
