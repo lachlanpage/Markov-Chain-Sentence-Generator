@@ -1,34 +1,33 @@
 #Markov Sentence Generator 
 #By Lachlan Page
 import random 
+import time 
 
 file_string = ""
 with open("book.txt", 'r') as content_file:
     file_string = content_file.read()
 file_string = file_string.split()
-#Only a subset of text need to optimize to quicken results
-file_string = file_string[:10000]
 
 #full stop in dictionary to handle end cases
 chain = {}
 chain['.'] = ' '
 
-#two passes first for finding keys, second pass for finding tokens
-for key in file_string: 
-    if key not in chain:
-        chain[key] = []
 
-#For token in dict, iterate through file_string for occurance of token, get next word and append to list. If not in bounds append '.'
-for token in chain:
-    token_list = []
-    for i in range(0, len(file_string)):
-        if(token == file_string[i]):
-            if(i+1) >= len(file_string):
-                #If out of bounds include full stop. Should fix this to use something else. 
-                token_list.append(".")
-            else:
-                token_list.append(file_string[i+1])
-    chain[token] = token_list
+#More efficient algorith. O(n)
+for i in range(0, len(file_string)):
+    key = file_string[i]
+    if key not in chain: 
+        chain[key] = []
+        if(i+1 < len(file_string)):
+            chain[key].append(file_string[i+1])
+        else:
+            chain[key].append('.')
+    else:
+        #already exists in chain
+        if(i+1 < len(file_string)): 
+            chain[key].append(file_string[i+1])
+        else:
+            chain[key].append('.')
 
 #Prediction 
 #Can move to dedicated function or something... 
