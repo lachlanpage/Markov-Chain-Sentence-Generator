@@ -1,7 +1,6 @@
-#Markov Sentence Generator 
+#Markov Model Second Order Sentence Generator 
 #By Lachlan Page
 import random 
-import string
 
 file_string = ""
 with open("book.txt", 'r') as content_file:
@@ -9,7 +8,7 @@ with open("book.txt", 'r') as content_file:
 file_string = file_string.lower()
 file_string = file_string.split()
 #Only a subset of text need to optimize to quicken results
-#file_string = file_string[:10000]
+file_string = file_string[:10000]
 
 #full stop in dictionary to handle end cases
 chain = {}
@@ -26,7 +25,6 @@ for i in range(0, len(file_string)):
     if pair not in chain:
         chain[pair] = []
 
-
 #For token in dict, iterate through file_string for occurance of token, get next word and append to list. If not in bounds append '.'
 #token is a tuple
 for token in chain:
@@ -42,54 +40,21 @@ for token in chain:
                         token_list.append(".")
             else:
                 token_list.append(".")
-    #print(token_list)
     chain[token] = token_list
 
-
-       
-"""
-for key in chain:
-    print(key)
-    print(chain[key])
-    print("\n\n")
-"""
 #prediction
-for x in range(1):
-    WORD_LENGTH = 25
-    start_word = random.choice(tuple(chain.keys()))
-
-
-    final_word_list = []
-
-
-    current_tuple = start_word
-
-    for i in range(WORD_LENGTH):
-        current_word = current_tuple
-        next_word = random.choice(chain[current_word])
-        current_tuple = (current_word[1], next_word)
-        final_word_list.append(next_word)
-
-    result = ''
-    for word in final_word_list:
-        result+= str(word) + " " 
-    print(result)
-
-"""
-#Prediction 
-#Can move to dedicated function or something... 
-WORD_LENGTH = 10
-start_word = random.choice(list(chain.keys()))
+WORD_LENGTH = 25
+start_word = random.choice(tuple(chain.keys()))
 final_word_list = []
-final_word_list.append(start_word)
+current_tuple = start_word
+
 for i in range(WORD_LENGTH):
-    current_word = final_word_list[i]
+    current_word = current_tuple
     next_word = random.choice(chain[current_word])
+    current_tuple = (current_word[1], next_word)
     final_word_list.append(next_word)
 
-#Formatting python list to a string for output
 result = ''
 for word in final_word_list:
-    result+= str(word) + " "
+    result+= str(word) + " " 
 print(result)
-"""
