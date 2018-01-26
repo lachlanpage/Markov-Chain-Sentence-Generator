@@ -1,17 +1,16 @@
 #Markov Sentence Generator 
 #By Lachlan Page
 import random 
-import time 
 
 file_string = ""
 with open("book.txt", 'r') as content_file:
     file_string = content_file.read()
+
 file_string = file_string.split()
 
 #full stop in dictionary to handle end cases
 chain = {}
 chain['.'] = ' '
-
 
 #More efficient algorith. O(n)
 for i in range(0, len(file_string)):
@@ -30,6 +29,7 @@ for i in range(0, len(file_string)):
             chain[key].append('.')
 
 #Prediction 
+print(len(chain.keys()))
 #Can move to dedicated function or something... 
 WORD_LENGTH = 10
 start_word = random.choice(list(chain.keys()))
