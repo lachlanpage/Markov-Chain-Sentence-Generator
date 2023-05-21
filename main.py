@@ -3,7 +3,7 @@
 import random 
 
 file_string = ""
-with open("book.txt", 'r') as content_file:
+with open("arrb-final-report.txt", 'r') as content_file:
     file_string = content_file.read()
 
 file_string = file_string.split()
