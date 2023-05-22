@@ -1,5 +1,12 @@
 import os
 import requests
+from n_order_markov import generate_text
+from n_order_markov import convert_word_list_to_string
+
+final_word_list = generate_text("bleak-house.txt", 4, 5)
+
+# Convert the word list to a string
+sentence = convert_word_list_to_string(final_word_list)
 
 api_key = os.environ["GPT_API_KEY"]
 headers = {
@@ -9,7 +16,7 @@ headers = {
 
 data = {
     "model": "text-davinci-003",
-    "prompt": "The following sentence may be missing something: \"addressing mr george as general she gave him her\". "
+    "prompt": "The following sentence may be missing something: \"{sentence}\". "
               "Please make the sentence make more sense. Please make the language sound even more 18th century in "
               "style. And don't return anything but the corrected sentence.",
     "temperature": 0.7,
