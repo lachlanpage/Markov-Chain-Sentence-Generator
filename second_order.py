@@ -3,7 +3,7 @@
 import random 
 
 file_string = ""
-with open("sampletext.txt", 'r') as content_file:
+with open("bleak-house.txt", 'r') as content_file:
     file_string = content_file.read()
 
 #Fixing formatting for sampletext, this can be removed for other text sources
@@ -39,7 +39,7 @@ for i in range(0, len(file_string)):
                 chain[key].append('.')
 
 #prediction
-WORD_LENGTH = 10
+WORD_LENGTH = 6
 start_word = random.choice(tuple(chain.keys()))
 final_word_list = []
 current_tuple = start_word
