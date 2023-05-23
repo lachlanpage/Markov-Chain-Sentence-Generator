@@ -43,7 +43,7 @@ def generate_text(file_name, prefix_length, word_length):
     # start_seq = ("one", "is")
     # start_seq is a tuple that must be the length of the markov order, eg. 3
     start_seq = random.choice(list(chain.keys()))
-    print(start_seq)
+    # print(start_seq)
     final_word_list = list(start_seq)
     current_seq = start_seq
 
@@ -60,7 +60,7 @@ def generate_text(file_name, prefix_length, word_length):
     if final_word_list[0] in ["and", "him"]:
         final_word_list.pop()
 
-    print(' '.join(final_word_list))
+    # print(' '.join(final_word_list))
 
     return final_word_list
 
@@ -68,4 +68,4 @@ def convert_word_list_to_string(final_word_list):
     return ' '.join(final_word_list)
 
 
-generate_text("bleak-house.txt", 4, 5)
+# generate_text("bleak-house.txt", 4, 5)
