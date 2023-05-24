@@ -37,10 +37,15 @@ The quote above is an example of how this algorithm, when trained on a text, wil
    * [Example texts to train the Markov model on](#example-texts-to-train-the-markov-model-on)
 
 
-# Usage
+# Installation and Usage
+
+You need to be using Python 3.x.
 
 ```commandline
-python3 chatGptApiCall.py
+git clone https://github.com/tcpiplab/Literary-style-imitation-using-Markov-chains-and-the-ChatGPT-4-API.git
+cd Literary-style-imitation-using-Markov-chains-and-the-ChatGPT-4-API
+pip install -r requirements.txt
+python chatGptApiCall.py
 ```
 
 
@@ -65,7 +70,7 @@ If you're using another shell like `ksh`, `tcsh`, `csh`, or `sh`, then I'm sure 
 
 
 ```shell
-echo 'export GPT_API_KEY=xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' >> ~/.zshrc
+echo 'export GPT_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
@@ -74,7 +79,7 @@ source ~/.zshrc
 You'll have to do this as root or use `sudo`. Either way, I assume that you know what you're doing if you have this level of authorization.
 
 ```shell
-sudo echo 'export GPT_API_KEY=xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' > /etc/profile.d/myenvvars.sh
+sudo echo 'export GPT_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' > /etc/profile.d/myenvvars.sh
 ```
 
 ## Windows
