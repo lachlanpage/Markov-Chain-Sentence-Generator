@@ -67,5 +67,3 @@ def generate_text(file_name, prefix_length, word_length):
 def convert_word_list_to_string(final_word_list):
     return ' '.join(final_word_list)
 
-
-# generate_text("bleak-house.txt", 4, 5)
