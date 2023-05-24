@@ -19,12 +19,12 @@ The quote above is an example of how this algorithm, when trained on a text, wil
 
 * [Literary style imitation using Markov chains and the ChatGPT-4 API](#literary-style-imitation-using-markov-chains-and-the-chatgpt-4-api)
    * [Sample Output from Heart of Darkness](#sample-output-from-heart-of-darkness)
-* [Usage](#usage)
+* [Installation and Usage](#installation-and-usage)
 * [Signing up for a ChatGPT-4 API key](#signing-up-for-a-chatgpt-4-api-key)
 * [Setting the GPT_API_KEY environment variable](#setting-the-gpt_api_key-environment-variable)
    * [Linux, Unix, and Mac OS](#linux-unix-and-mac-os)
-         * [User level and persistent](#user-level-and-persistent)
-         * [System level and persistent](#system-level-and-persistent)
+      * [User level and persistent](#user-level-and-persistent)
+      * [System level and persistent](#system-level-and-persistent)
    * [Windows](#windows)
       * [Windows Powershell](#windows-powershell)
          * [User level and persistent](#user-level-and-persistent-1)
@@ -35,6 +35,7 @@ The quote above is an example of how this algorithm, when trained on a text, wil
 * [Files](#files)
    * [Python source code files](#python-source-code-files)
    * [Example texts to train the Markov model on](#example-texts-to-train-the-markov-model-on)
+
 
 
 # Installation and Usage
@@ -75,15 +76,14 @@ The examples below are for if you're using the `zsh` shell. If you're not using 
 
 If you're using another shell like `ksh`, `tcsh`, `csh`, or `sh`, then I'm sure you know exactly what you're doing and can figure out how to set environment variables with no problem.
 
-#### User level and persistent
-
+### User level and persistent
 
 ```shell
 echo 'export GPT_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-#### System level and persistent
+### System level and persistent
 
 You'll have to do this as root or use `sudo`. Either way, I assume that you know what you're doing if you have this level of authorization.
 
