@@ -39,12 +39,21 @@ The quote above is an example of how this algorithm, when trained on a text, wil
 
 # Installation and Usage
 
-You need to be using Python 3.x.
+You need to be using Python 3.x. 
 
 ```commandline
+# Clone the repo
 git clone https://github.com/tcpiplab/Literary-style-imitation-using-Markov-chains-and-the-ChatGPT-4-API.git
 cd Literary-style-imitation-using-Markov-chains-and-the-ChatGPT-4-API
+
+# Install the requirements. You can optionally use a virtual environemt if you know how.
 pip install -r requirements.txt
+
+# Add your API key as an environment variable. See instructions below.
+echo 'export GPT_API_KEY="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"' >> ~/.zshrc
+source ~/.zshrc
+
+# Run the program.
 python chatGptApiCall.py
 ```
 
