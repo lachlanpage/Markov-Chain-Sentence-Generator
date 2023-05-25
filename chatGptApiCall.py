@@ -7,20 +7,24 @@ from n_order_markov import convert_word_list_to_string
 # The text to use for training the Markov model.
 TRAINING_CORPUS = "heartOfDarkness.txt"
 
+# TODO: Create a command line option to specify the Markov order
 # Which order of Markov model, or how many words to look backwards when predicting the next word. Generally,
 # higher-order Markov models capture more context, leading to more coherent and contextually accurate generated
 # sequences. For second order Markov set this to 2. Any higher and results can approach verbatim excerpts. Any lower
 # and it becomes less coherent.
 MARKOV_ORDER = 2
 
+# TODO: Create a command line option to specify the result length
 # Set how long of a sentence or paragraph you want in the resulting text.
 RESULT_LENGTH = 30
 
+# TODO: Create a command line option to specify the temperature
 # Set how creative or determinative you want ChatGPT to be when cleaning up the sentence. The "temperature" parameter
 # Set a float between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2
 # will make it more focused and deterministic.
 TEMPERATURE = 0.7
 
+# TODO: Create a command line option to specify the max tokens
 # Set the maximum number of tokens to generate in the ChatGPT API response.
 # max_tokens is an integer, is optional, and defaults to 16.
 # A helpful rule of thumb is that one token generally corresponds to ~4 characters of text for common
@@ -46,7 +50,7 @@ headers = {
 data = {
     "model": "text-davinci-003",
     "prompt": "The following sentence may be missing something: \"" + sentence + "\". "
-              "Please make the sentence make more sense" # and make the language sound even more 18th century in "
+              "Please make the sentence make more sense" 
               "And don't return anything but a single sentence. I only want to see one version of the sentence.",
     "temperature": TEMPERATURE,
     "max_tokens": MAX_TOKENS,
@@ -59,7 +63,10 @@ if response.status_code == 200:
     corrected_sentence = response.json().get("choices", [{}])[0].get("text", "").strip()
     if corrected_sentence:
 
+        # TODO: Create a command line boolean option to print the original Markov generated text
         print(sentence)
+
+        # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
         print(corrected_sentence)
 
     else:
@@ -67,5 +74,4 @@ if response.status_code == 200:
 else:
     print(f"Error: API call failed with status code {response.status_code}. Response: {response.text}")
 
-# print(corrected_sentence)
 
