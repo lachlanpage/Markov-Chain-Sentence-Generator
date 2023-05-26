@@ -73,5 +73,3 @@ if response.status_code == 200:
         print("Error: Could not extract the corrected sentence.")
 else:
     print(f"Error: API call failed with status code {response.status_code}. Response: {response.text}")
-
-

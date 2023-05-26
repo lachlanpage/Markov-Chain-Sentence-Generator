@@ -13,9 +13,15 @@ The overall algorithm does this:
 The original intent was to learn more about Markov models and [ChatGPT-4 API](https://platform.openai.com/docs/api-reference). Use at your own risk. And don't use it for malicious purposes.
 
 ## Sample Output from Heart of Darkness
-> He raided the country perhaps, and at that moment I stood horror struck at the sight of one of the pilgrims behind the blind whiteness of the immense matted jungle, with the thought that at least this was the reality.
+> He raided the country perhaps, and at that moment I stood horror-struck at the sight of one of the pilgrims behind the blind whiteness of the immense matted jungle, with the thought that at least this was the reality.
 
-The quote above is an example of how this algorithm, when trained on a text, will generate a convincingly authentic sounding quote that sounds like it came from the original text. Although this quote is not from Heart of Darkness, if you search Google or ChatGPT for the quote they will return results from Heart of Darkness.
+The quote above is an example of how this algorithm, when trained on a text, will generate a convincingly authentic 
+sounding quote that sounds like it came from the original text. Although this quote is not from Heart of Darkness, 
+if you search Google or ChatGPT for the quote they will return results from Heart of Darkness. 
+
+Using Markov chains, the result is more convincing than if you simply asked ChatGPT to simulate an imaginary quote from 
+the text; those examples often seem silly or more like broad summarizations of the overall text. Whereas this program's output are 
+often convincingly authentic sounding compared with the original text.
 
 * [Literary style imitation using Markov chains and the ChatGPT-4 API](#literary-style-imitation-using-markov-chains-and-the-chatgpt-4-api)
    * [Sample Output from Heart of Darkness](#sample-output-from-heart-of-darkness)
