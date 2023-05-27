@@ -32,7 +32,10 @@ MAX_TOKENS = 50
 # model to generate. Setting "n" to 1 means that only one version of the sentence will be returned.
 NUM_OF_RESPONSES = 1
 
-def call_openai_api(input_file=TRAINING_CORPUS):
+def call_openai_api(input_file=None):
+
+    if input_file is not None :
+        TRAINING_CORPUS = input_file
 
     final_word_list = generate_text(TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH)
     # Convert the word list to a string
