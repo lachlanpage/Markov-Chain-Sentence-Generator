@@ -12,7 +12,7 @@ TRAINING_CORPUS = "heartOfDarkness.txt"
 # higher-order Markov models capture more context, leading to more coherent and contextually accurate generated
 # sequences. For second order Markov set this to 2. Any higher and results can approach verbatim excerpts. Any lower
 # and it becomes less coherent.
-# TODO: Quantify and filter directly quoted phrases of too many sesquential words because 2 is too close to verbatim sometimes.
+# TODO: Create a similarity check. Quantify and filter directly quoted phrases of too many sesquential words because 2 is too close to verbatim sometimes.
 MARKOV_ORDER = 2
 
 # TODO: Create a command line option to specify the result length
