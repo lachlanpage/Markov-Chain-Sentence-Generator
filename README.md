@@ -26,6 +26,7 @@ often convincingly authentic sounding compared with the original text.
 * [Literary style imitation using Markov chains and the ChatGPT-4 API](#literary-style-imitation-using-markov-chains-and-the-chatgpt-4-api)
    * [Sample Output from Heart of Darkness](#sample-output-from-heart-of-darkness)
 * [Installation and Usage](#installation-and-usage)
+* [Help output](#help-output)
 * [Signing up for a ChatGPT-4 API key](#signing-up-for-a-chatgpt-4-api-key)
 * [Setting the GPT_API_KEY environment variable](#setting-the-gpt_api_key-environment-variable)
    * [Linux, Unix, and Mac OS](#linux-unix-and-mac-os)
@@ -64,6 +65,24 @@ source ~/.zshrc
 python chatGptApiCall.py
 ```
 
+# Help output
+
+```shell
+$ python mimic.py --help
+usage: mimic.py [-h] [-i INPUT_FILE] [-r] [-c] [-s SEED_WORDS]
+
+A command line tool to generate random phrases that imitate a literary style based on a training text.
+
+options:
+  -h, --help            show this help message and exit
+  -i INPUT_FILE, --input-file INPUT_FILE
+                        Path to the input file (optional)
+  -r, --raw-markov      Print the raw Markov result (optional)
+  -c, --similarity-check
+                        Quantify how similar the output is to the original text (optional)
+  -s SEED_WORDS, --seed-words SEED_WORDS
+                        Word(s) to seed the Markov search. If not found it will be added to the resulting output. (optional)
+```
 
 # Signing up for a ChatGPT-4 API key
 
