@@ -78,9 +78,9 @@ def generate_text(corpus_file_name, prefix_length, output_words_length):
         chain[seq].append(corpus_as_string[i + prefix_length] if i + prefix_length < len(corpus_as_string) else '.')
 
     # Generate the text
-    # TODO: Choose the first word of the sentence from STDIN so you can direct the output a bit.
-    # start_seq = ("one", "is")
-    # start_seq is a tuple that must be the length of the markov order, eg. 3
+    # start_seq is a tuple that must be the length of the markov order, eg. 2
+    # TODO: Choose the first word(s) of the sentence from STDIN so you can direct the output a bit.
+    # start_seq = ('was', 'looking')
     start_seq = random.choice(list(chain.keys()))
     # print(start_seq)
     output_word_list = list(start_seq)

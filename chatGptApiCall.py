@@ -39,15 +39,6 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False):
         if similarity_check:
 
             # TODO: How to pass reference without calling this again?
-            # corpus_text_reference = return_corpus_text(TRAINING_CORPUS)
-
-            # # Call similarity check function here
-            # check_similarity(corpus_text_reference, )
-            # pass
-
-            # Example usage
-            # input_text = "The entire corpus content goes here..."
-            # TODO: How to pass reference without calling this again?
             input_text = return_corpus_text(TRAINING_CORPUS)
             output_text = "A generated sequence of about 30 words..."
             output_text = corrected_sentence
@@ -70,7 +61,7 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False):
         if corrected_sentence:
 
             if raw_markov:
-                # TODO: Create a command line boolean option to print the original Markov generated text
+
                 print(sentence)
 
             # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
