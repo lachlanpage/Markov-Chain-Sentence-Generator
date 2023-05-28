@@ -10,8 +10,9 @@ def main():
     # Add the optional input file argument
     parser.add_argument("-i", "--input-file", help="Path to the input file", default=None)
     parser.add_argument("-r", "--raw-markov", action="store_true", help="Print the raw Markov result")
-    parser.add_argument("-o", "--output", default="output.txt", help="Path to the output file")
-    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+    parser.add_argument("-s", "--similarity-check", action="store_true", help="Quantify how similar the output is to the original text")
+    # parser.add_argument("-o", "--output", default="output.txt", help="Path to the output file")
+    # parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 
     # Parse arguments
     args = parser.parse_args()
@@ -22,9 +23,9 @@ def main():
     # print("Verbose mode:", args.verbose)
 
     if args.input_file is None :
-        call_openai_api(None, args.raw_markov)
+        call_openai_api(None, args.raw_markov, args.similarity_check)
     else:
-        call_openai_api(args.input_file, args.raw_markov)
+        call_openai_api(args.input_file, args.raw_markov, args.similarity_check)
 
 if __name__ == "__main__":
     main()

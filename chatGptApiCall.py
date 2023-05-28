@@ -6,14 +6,12 @@ from n_order_markov import generate_text
 from n_order_markov import convert_word_list_to_string
 from config import TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH, TEMPERATURE, MAX_TOKENS, NUM_OF_RESPONSES
 
-def call_openai_api(input_file=None, raw_markov=False):
-
+def call_openai_api(input_file=None, raw_markov=False, similarity_check=False):
 
     if input_file is not None :
         TRAINING_CORPUS = input_file
     else:
         TRAINING_CORPUS = config.TRAINING_CORPUS
-
 
     final_word_list = generate_text(TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH)
     # Convert the word list to a string
@@ -35,6 +33,11 @@ def call_openai_api(input_file=None, raw_markov=False):
     response = requests.post("https://api.openai.com/v1/completions", headers=headers, json=data)
     if response.status_code == 200:
         corrected_sentence = response.json().get("choices", [{}])[0].get("text", "").strip()
+
+        if similarity_check:
+            # Call similarity check function here
+            pass
+
         if corrected_sentence:
 
             if raw_markov:
