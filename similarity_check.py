@@ -28,8 +28,12 @@ def check_similarity(input_text, output_text, window_size, threshold):
         matcher.set_seq2(current_window)
         similarity = matcher.ratio()
 
+
         # If similarity exceeds the threshold, the output is considered too similar
         if similarity >= threshold:
+            print("Similarity: ", similarity)
+            print(output_words)
+            print(current_window)
             return True
 
     return False

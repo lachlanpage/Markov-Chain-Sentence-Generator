@@ -51,8 +51,8 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False):
             input_text = return_corpus_text(TRAINING_CORPUS)
             output_text = "A generated sequence of about 30 words..."
             output_text = corrected_sentence
-            window_size = 30
-            similarity_threshold = 0.8
+            window_size = 5
+            similarity_threshold = 0.35
 
 
 
