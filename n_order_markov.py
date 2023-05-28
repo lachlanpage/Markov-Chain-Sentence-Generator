@@ -15,7 +15,7 @@ def convert_word_list_to_string(final_output_word_list):
     return ' '.join(final_output_word_list)
 
 
-def generate_text(corpus_file_name, prefix_length, output_words_length):
+def generate_text(corpus_file_name, prefix_length, output_words_length, seed_words=None):
     """
     Generate random text based on the input file content, and given prefix and word lengths.
 
@@ -81,16 +81,32 @@ def generate_text(corpus_file_name, prefix_length, output_words_length):
     # start_seq is a tuple that must be the length of the markov order, eg. 2
     # TODO: Choose the first word(s) of the sentence from STDIN so you can direct the output a bit.
     # start_seq = ('was', 'looking')
-    start_seq = random.choice(list(chain.keys()))
-    # print(start_seq)
+
+    start_seq = None
+
+    if seed_words is not None:
+
+        start_seq = tuple(seed_words.split())
+
+    else:
+
+        start_seq = random.choice(list(chain.keys()))
+        # print(start_seq)
+
     output_word_list = list(start_seq)
     current_seq = start_seq
 
     # This loop generates a sequence of words using a Markov chain, where chain is a dictionary
     # representing the transitions between words. Loop output_words_length times
     for i in range(output_words_length):
-        # Choose the next word randomly from possible words associated with current_seq
-        next_word = random.choice(chain[current_seq])
+
+        try:
+            # Choose the next word randomly from possible words associated with current_seq
+            next_word = random.choice(chain[current_seq])
+        except KeyError:
+            print("The exact seed word sequence '{}' was not found in the original corpus.".format(seed_words))
+            current_seq = random.choice(list(chain.keys()))
+            next_word = random.choice(chain[current_seq])
 
         # Update current_seq by adding next_word, removing the first word and converting back to tuple
         current_seq = tuple((list(current_seq) + [next_word])[1:])

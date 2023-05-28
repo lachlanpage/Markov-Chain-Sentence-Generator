@@ -8,14 +8,14 @@ from n_order_markov import return_corpus_text
 from similarity_check import check_similarity
 from config import TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH, TEMPERATURE, MAX_TOKENS, NUM_OF_RESPONSES
 
-def call_openai_api(input_file=None, raw_markov=False, similarity_check=False):
+def call_openai_api(input_file=None, raw_markov=False, similarity_check=False, seed_words=None):
 
     if input_file is not None :
         TRAINING_CORPUS = input_file
     else:
         TRAINING_CORPUS = config.TRAINING_CORPUS
 
-    raw_markov_result_string = generate_text(TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH)
+    raw_markov_result_string = generate_text(TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH, seed_words)
     # Convert the word list to a string
     sentence = convert_word_list_to_string(raw_markov_result_string)
     api_key = os.environ["GPT_API_KEY"]
@@ -26,8 +26,8 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False):
     data = {
         "model": "text-davinci-003",
         "prompt": "The following sentence may be missing something: \"" + sentence + "\". "
-                                                                                     "Please make the sentence make more sense"
-                                                                                     "And don't return anything but a single sentence. I only want to see one version of the sentence.",
+        "Please make the sentence make more sense"
+        "And don't return anything but a single sentence. I only want to see one version of the sentence.",
         "temperature": TEMPERATURE,
         "max_tokens": MAX_TOKENS,
         "n": NUM_OF_RESPONSES,
@@ -40,7 +40,6 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False):
 
             # TODO: How to pass reference without calling this again?
             input_text = return_corpus_text(TRAINING_CORPUS)
-            output_text = "A generated sequence of about 30 words..."
             output_text = corrected_sentence
             window_size = 5
             similarity_threshold = 0.35
