@@ -6,9 +6,7 @@ from n_order_markov import generate_text
 from n_order_markov import convert_word_list_to_string
 from config import TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH, TEMPERATURE, MAX_TOKENS, NUM_OF_RESPONSES
 
-# TODO: Create a command line option to specify the training corpus
-
-def call_openai_api(input_file=None):
+def call_openai_api(input_file=None, raw_markov=False):
 
 
     if input_file is not None :
@@ -39,8 +37,9 @@ def call_openai_api(input_file=None):
         corrected_sentence = response.json().get("choices", [{}])[0].get("text", "").strip()
         if corrected_sentence:
 
-            # TODO: Create a command line boolean option to print the original Markov generated text
-            print(sentence)
+            if raw_markov:
+                # TODO: Create a command line boolean option to print the original Markov generated text
+                print(sentence)
 
             # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
             print(corrected_sentence)

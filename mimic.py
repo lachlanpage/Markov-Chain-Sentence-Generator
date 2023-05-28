@@ -9,6 +9,7 @@ def main():
     # parser.add_argument("input_file", help="Path to the input file")
     # Add the optional input file argument
     parser.add_argument("-i", "--input-file", help="Path to the input file", default=None)
+    parser.add_argument("-r", "--raw-markov", action="store_true", help="Print the raw Markov result")
     parser.add_argument("-o", "--output", default="output.txt", help="Path to the output file")
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 
@@ -21,9 +22,9 @@ def main():
     # print("Verbose mode:", args.verbose)
 
     if args.input_file is None :
-        call_openai_api()
+        call_openai_api(None, args.raw_markov)
     else:
-        call_openai_api(args.input_file)
+        call_openai_api(args.input_file, args.raw_markov)
 
 if __name__ == "__main__":
     main()
