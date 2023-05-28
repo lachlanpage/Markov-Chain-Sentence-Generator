@@ -4,6 +4,8 @@ import requests
 import config
 from n_order_markov import generate_text
 from n_order_markov import convert_word_list_to_string
+from n_order_markov import return_corpus_text
+from similarity_check import check_similarity
 from config import TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH, TEMPERATURE, MAX_TOKENS, NUM_OF_RESPONSES
 
 def call_openai_api(input_file=None, raw_markov=False, similarity_check=False):
@@ -13,9 +15,9 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False):
     else:
         TRAINING_CORPUS = config.TRAINING_CORPUS
 
-    final_word_list = generate_text(TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH)
+    raw_markov_result_string = generate_text(TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH)
     # Convert the word list to a string
-    sentence = convert_word_list_to_string(final_word_list)
+    sentence = convert_word_list_to_string(raw_markov_result_string)
     api_key = os.environ["GPT_API_KEY"]
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -35,8 +37,35 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False):
         corrected_sentence = response.json().get("choices", [{}])[0].get("text", "").strip()
 
         if similarity_check:
-            # Call similarity check function here
-            pass
+
+            # TODO: How to pass reference without calling this again?
+            # corpus_text_reference = return_corpus_text(TRAINING_CORPUS)
+
+            # # Call similarity check function here
+            # check_similarity(corpus_text_reference, )
+            # pass
+
+            # Example usage
+            # input_text = "The entire corpus content goes here..."
+            # TODO: How to pass reference without calling this again?
+            input_text = return_corpus_text(TRAINING_CORPUS)
+            output_text = "A generated sequence of about 30 words..."
+            output_text = corrected_sentence
+            window_size = 30
+            similarity_threshold = 0.8
+
+
+
+            too_similar = check_similarity(input_text, output_text, window_size, similarity_threshold)
+            print("Is the generated text too similar?", too_similar)
+
+            # Replace input_text and output_text with your actual texts. Adjust window_size and
+            # similarity_threshold as needed. This code checks if there's any part of the input
+            # text with a similarity ratio above the defined threshold when compared to the
+            # output text. The sliding window size determines how many words you want to consider
+            # at once while scanning the entire corpus.
+
+
 
         if corrected_sentence:
 

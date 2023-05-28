@@ -1,12 +1,26 @@
 import random
 
+def return_corpus_text(corpus_file_name):
 
-def generate_text(file_name, prefix_length, output_words_length):
+    with open(corpus_file_name, 'r') as content_file:
+        corpus_as_string = content_file.read()
+
+    return corpus_as_string
+
+
+# def reference_corpus_text
+
+
+def convert_word_list_to_string(final_output_word_list):
+    return ' '.join(final_output_word_list)
+
+
+def generate_text(corpus_file_name, prefix_length, output_words_length):
     """
     Generate random text based on the input file content, and given prefix and word lengths.
 
     Args:
-      file_name (str): The path to the input text file.
+      corpus_file_name (str): The path to the input text file.
       prefix_length (int): The length of the prefix as a tuple for the transition dictionary.
       output_words_length (int): The number of words in the generated text.
 
@@ -16,19 +30,21 @@ def generate_text(file_name, prefix_length, output_words_length):
     Prints:
       The generated text based on the provided parameters.
     """
-    with open(file_name, 'r') as content_file:
-        file_string = content_file.read()
+    # with open(corpus_file_name, 'r') as content_file:
+    #     corpus_as_string = content_file.read()
+
+    corpus_as_string = return_corpus_text(corpus_file_name)
 
     # Preprocessing the text
-    file_string = file_string.lower()
+    corpus_as_string = corpus_as_string.lower()
     for char in ["!", ".", ",", "@", "&amp;", "?", "-"]:
-        file_string = file_string.replace(char, " ")
+        corpus_as_string = corpus_as_string.replace(char, " ")
     for char in ['"', '(', ')']:
-        file_string = file_string.replace(char, "")
-    file_string = file_string.split()
+        corpus_as_string = corpus_as_string.replace(char, "")
+    corpus_as_string = corpus_as_string.split()
 
     # Initialize the transition dictionary.
-    # Build a transition dictionary called chain for the given text represented by file_string.
+    # Build a transition dictionary called chain for the given text represented by corpus_as_string.
     # It uses a Markov chain model, where the keys are sequences of characters (prefixes) and
     # the values are lists of characters that follow the corresponding sequence (successor characters).
     #
@@ -42,14 +58,14 @@ def generate_text(file_name, prefix_length, output_words_length):
     chain = {}
     chain[tuple(['.'] * prefix_length)] = [' ']
 
-    # Build the transition dictionary by iterating through the text in file_string, extracting
+    # Build the transition dictionary by iterating through the text in corpus_as_string, extracting
     # subsequences of length prefix_length and updating the transition dictionary:
-    for i in range(len(file_string) - prefix_length):
+    for i in range(len(corpus_as_string) - prefix_length):
 
         # Create a tuple seq from the current subsequence of characters. Extracts a substring of length prefix_length
-        # from file_string starting at index i. Then, tuple() converts the resulting substring into a tuple
+        # from corpus_as_string starting at index i. Then, tuple() converts the resulting substring into a tuple
         # containing individual characters of the substring. Finally, the tuple is assigned to the variable seq.
-        seq = tuple(file_string[i: i + prefix_length])
+        seq = tuple(corpus_as_string[i: i + prefix_length])
 
         # Check if the sequence seq is not in the chain dictionary yet.
         if seq not in chain:
@@ -58,8 +74,8 @@ def generate_text(file_name, prefix_length, output_words_length):
             chain[seq] = []
 
         # Append a character to the list of characters associated with this sequence.
-        # The character is the one after the end of the sequence in the file_string
-        chain[seq].append(file_string[i + prefix_length] if i + prefix_length < len(file_string) else '.')
+        # The character is the one after the end of the sequence in the corpus_as_string
+        chain[seq].append(corpus_as_string[i + prefix_length] if i + prefix_length < len(corpus_as_string) else '.')
 
     # Generate the text
     # TODO: Choose the first word of the sentence from STDIN so you can direct the output a bit.
@@ -67,7 +83,7 @@ def generate_text(file_name, prefix_length, output_words_length):
     # start_seq is a tuple that must be the length of the markov order, eg. 3
     start_seq = random.choice(list(chain.keys()))
     # print(start_seq)
-    final_word_list = list(start_seq)
+    output_word_list = list(start_seq)
     current_seq = start_seq
 
     # This loop generates a sequence of words using a Markov chain, where chain is a dictionary
@@ -79,21 +95,19 @@ def generate_text(file_name, prefix_length, output_words_length):
         # Update current_seq by adding next_word, removing the first word and converting back to tuple
         current_seq = tuple((list(current_seq) + [next_word])[1:])
 
-        # Add the chosen next_word to final_word_list which stores the full sequence of generated words
-        final_word_list.append(next_word)
+        # Add the chosen next_word to output_word_list which stores the full sequence of generated words
+        output_word_list.append(next_word)
 
     # If the last word of the sentence is "and", remove it.
-    if final_word_list[-1] in ["and", "i", "mr"]:
-        final_word_list.pop()
+    if output_word_list[-1] in ["and", "i", "mr"]:
+        output_word_list.pop()
 
     # If the first word of the sentence is "and", remove it.
-    if final_word_list[0] in ["and", "him"]:
-        final_word_list.pop()
+    if output_word_list[0] in ["and", "him"]:
+        output_word_list.pop()
 
-    # print(' '.join(final_word_list))
+    # print(' '.join(output_word_list))
 
-    return final_word_list
+    return output_word_list
 
-def convert_word_list_to_string(final_word_list):
-    return ' '.join(final_word_list)
 

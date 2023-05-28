@@ -1,6 +1,7 @@
 import argparse
 from chatGptApiCall import call_openai_api
 
+
 def main():
     # Create the argument parser
     parser = argparse.ArgumentParser(description="A simple command line tool")

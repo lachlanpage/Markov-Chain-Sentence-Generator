@@ -5,6 +5,11 @@ import difflib
 # text (the entire novel). One possible approach is using Python's difflib.SequenceMatcher:
 
 
+def get_corpus_string(corpus_as_string):
+
+    return corpus_as_string
+
+
 def check_similarity(input_text, output_text, window_size, threshold):
     # Split texts into words
     input_words = input_text.split()
@@ -29,17 +34,3 @@ def check_similarity(input_text, output_text, window_size, threshold):
 
     return False
 
-# Example usage
-input_text = "The entire corpus content goes here..."
-output_text = "A generated sequence of about 30 words..."
-window_size = 30
-similarity_threshold = 0.8
-
-too_similar = check_similarity(input_text, output_text, window_size, similarity_threshold)
-print("Is the generated text too similar?", too_similar)
-
-# Replace input_text and output_text with your actual texts. Adjust window_size and
-# similarity_threshold as needed. This code checks if there's any part of the input
-# text with a similarity ratio above the defined threshold when compared to the
-# output text. The sliding window size determines how many words you want to consider
-# at once while scanning the entire corpus.
