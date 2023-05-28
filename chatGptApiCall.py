@@ -1,12 +1,18 @@
 import os
 import requests
-
+import logging
+import coloredlogs
 import config
 from n_order_markov import generate_text
 from n_order_markov import convert_word_list_to_string
 from n_order_markov import return_corpus_text
 from similarity_check import check_similarity
 from config import TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH, TEMPERATURE, MAX_TOKENS, NUM_OF_RESPONSES
+
+# Set up colored logging
+logger = logging.getLogger(__name__)
+coloredlogs.install(level='DEBUG', logger=logger)
+
 
 def call_openai_api(input_file=None, raw_markov=False, similarity_check=False, seed_words=None):
 
@@ -65,6 +71,11 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False, s
 
             # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
             print(corrected_sentence)
+
+            logger.error("This is an error message in red color.")
+            logger.warning("This is a warning message in yellow color.")
+            logger.info("This is an info message in green color.")
+            logger.debug("This is a debug message in white color.")
 
         else:
             print("Error: Could not extract the corrected sentence.")
