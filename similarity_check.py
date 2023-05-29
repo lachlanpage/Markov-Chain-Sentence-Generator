@@ -1,4 +1,7 @@
 import difflib
+from log_config import configure_logger
+
+logger = configure_logger(__name__)
 
 # For your scenario, you can use a sliding window approach along with a sequence matching
 # technique to check if the generated output (30 words) is similar to any part of the input
