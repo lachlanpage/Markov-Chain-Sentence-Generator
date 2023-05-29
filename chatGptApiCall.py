@@ -1,12 +1,40 @@
 import os
+import time
 import requests
-
 import config
 from n_order_markov import generate_text
 from n_order_markov import convert_word_list_to_string
 from n_order_markov import return_corpus_text
 from similarity_check import check_similarity
 from config import TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH, TEMPERATURE, MAX_TOKENS, NUM_OF_RESPONSES
+from colorama import init, Fore, Style
+from log_config import configure_logger
+
+logger = configure_logger(__name__)
+# Initialize colorama
+init(autoreset=True)
+
+# print(f"{Fore.RED}This is red text.")
+# print(f"{Fore.GREEN}This is green text.")
+# print(f"{Fore.YELLOW}This is yellow text.")
+# print(f"{Fore.CYAN}This is cyan text.")
+# print(f"{Fore.MAGENTA}This is magenta text.")
+# print(f"{Fore.BLUE}This is blue text.")
+# Use "{Style.RESET_ALL}" to reset in the middle of a sentence.
+
+# Set up colored logging
+# logger = logging.getLogger(__name__)
+# fmt = "[%(levelname)s] %(message)s"
+# # Customize field color of INFO level as well (for the [INFO] part)
+# coloredlogs.DEFAULT_FIELD_STYLES["levelname"]["info"] = {"color": "white"}
+# # Customizing the error level color
+# coloredlogs.DEFAULT_LEVEL_STYLES["info"] = {"color": "white"}
+# coloredlogs.install(level='DEBUG', logger=logger, fmt=fmt)
+
+# logger.error("This is an error message in red color.")
+# logger.warning("This is a warning message in yellow color.")
+# logger.info("This is an info message in green color.")
+# logger.debug("This is a debug message in white color.")
 
 def call_openai_api(input_file=None, raw_markov=False, similarity_check=False, seed_words=None):
 
@@ -44,30 +72,28 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False, s
             window_size = 5
             similarity_threshold = 0.35
 
-
-
             too_similar = check_similarity(input_text, output_text, window_size, similarity_threshold)
-            print("Is the generated text too similar?", too_similar)
 
-            # Replace input_text and output_text with your actual texts. Adjust window_size and
-            # similarity_threshold as needed. This code checks if there's any part of the input
-            # text with a similarity ratio above the defined threshold when compared to the
-            # output text. The sliding window size determines how many words you want to consider
-            # at once while scanning the entire corpus.
+            logger.info(f"Is the generated text too similar? {too_similar}")
 
-
+            # Sleep for a second to give the API call time to finish
+            # so that this log message doesn't print below the final output
+            time.sleep(1)
 
         if corrected_sentence:
 
             if raw_markov:
 
-                print(sentence)
+                print(f"{Fore.YELLOW}[RAW MARKOV]{Style.RESET_ALL} '{sentence}'")
 
             # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
-            print(corrected_sentence)
+            print(f"{Fore.GREEN}[MIMICKED QUOTE]{Style.RESET_ALL} '{corrected_sentence}'")
+
+
 
         else:
-            print("Error: Could not extract the corrected sentence.")
+            # print("Error: Could not extract the corrected sentence.")
+            logger.error("Error: Could not extract the corrected sentence.")
     else:
-        print(f"Error: API call failed with status code {response.status_code}. Response: {response.text}")
-
+        # print(f"Error: API call failed with status code {response.status_code}. Response: {response.text}")
+        logger.error(f"Error: API call failed with status code {response.status_code}. Response: {response.text}")

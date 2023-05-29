@@ -1,4 +1,29 @@
 import random
+from colorama import init, Fore, Style
+from log_config import configure_logger
+
+logger = configure_logger(__name__)
+
+# Initialize colorama
+init(autoreset=True)
+
+# print(f"{Fore.RED}This is red text.")
+# print(f"{Fore.GREEN}This is green text.")
+# print(f"{Fore.YELLOW}This is yellow text.")
+# print(f"{Fore.CYAN}This is cyan text.")
+# print(f"{Fore.MAGENTA}This is magenta text.")
+# print(f"{Fore.BLUE}This is blue text.")
+
+
+# Set up colored logging
+# logger = logging.getLogger(__name__)
+# fmt = "[%(levelname)s] %(message)s"
+# # Customize field color of INFO level as well (for the [INFO] part)
+# coloredlogs.DEFAULT_FIELD_STYLES["levelname"]["info"] = {"color": "white"}
+# # Customizing the error level color
+# coloredlogs.DEFAULT_LEVEL_STYLES["info"] = {"color": "white"}
+# coloredlogs.install(level='DEBUG', logger=logger, fmt=fmt)
+
 
 def return_corpus_text(corpus_file_name):
 
@@ -96,6 +121,7 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
     output_word_list = list(start_seq)
     current_seq = start_seq
 
+
     # This loop generates a sequence of words using a Markov chain, where chain is a dictionary
     # representing the transitions between words. Loop output_words_length times
     for i in range(output_words_length):
@@ -104,7 +130,16 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
             # Choose the next word randomly from possible words associated with current_seq
             next_word = random.choice(chain[current_seq])
         except KeyError:
-            print("The exact seed word sequence '{}' was not found in the original corpus.".format(seed_words))
+            # not_found_message = f"The exact seed word sequence {Fore.RED}'{seed_words}'{Style.RESET_ALL} was not found in the original corpus."
+
+            not_found_message = (
+                f"The exact seed word sequence {Fore.RED}"
+                f"'{seed_words}'"
+                f"{Style.RESET_ALL} was not found in the original corpus."
+            )
+
+            logger.info(f"{not_found_message}")
+
             current_seq = random.choice(list(chain.keys()))
             next_word = random.choice(chain[current_seq])
 

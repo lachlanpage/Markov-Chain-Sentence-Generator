@@ -1,5 +1,20 @@
 import argparse
 from chatGptApiCall import call_openai_api
+from log_config import configure_logger
+
+# Set up colored logging
+logger = configure_logger(__name__)
+# import logging
+# import coloredlogs
+#
+# # Set up colored logging
+# logger = logging.getLogger(__name__)
+# fmt = "[%(levelname)s] %(message)s"
+# # Customize field color of INFO level as well (for the [INFO] part)
+# coloredlogs.DEFAULT_FIELD_STYLES["levelname"]["info"] = {"color": "white"}
+# # Customizing the error level color
+# coloredlogs.DEFAULT_LEVEL_STYLES["info"] = {"color": "white"}
+# coloredlogs.install(level='DEBUG', logger=logger, fmt=fmt)
 
 
 def main():
@@ -14,6 +29,7 @@ def main():
     parser.add_argument("-c", "--similarity-check", action="store_true", help="Quantify how similar the output is to the original text (optional)")
     parser.add_argument("-s", "--seed-words", help="Word(s) to seed the Markov search. If not found it will be added to the resulting output. (optional)", default=None)
     # parser.add_argument("-o", "--output", default="output.txt", help="Path to the output file")
+    # TODO: Add --verbose to output DEBUG messages
     # parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
 
     # Parse arguments
