@@ -1,6 +1,12 @@
 import argparse
 from chatGptApiCall import call_openai_api
+import logging
+import coloredlogs
 
+# Set up colored logging
+logger = logging.getLogger(__name__)
+fmt = "[%(levelname)s] %(message)s"
+coloredlogs.install(level='DEBUG', logger=logger, fmt=fmt)
 
 def main():
     # Create the argument parser

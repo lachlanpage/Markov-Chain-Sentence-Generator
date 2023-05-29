@@ -1,4 +1,24 @@
 import random
+import logging
+import coloredlogs
+from colorama import init, Fore, Style
+
+# Initialize colorama
+init(autoreset=True)
+
+# print(f"{Fore.RED}This is red text.")
+# print(f"{Fore.GREEN}This is green text.")
+# print(f"{Fore.YELLOW}This is yellow text.")
+# print(f"{Fore.CYAN}This is cyan text.")
+# print(f"{Fore.MAGENTA}This is magenta text.")
+# print(f"{Fore.BLUE}This is blue text.")
+
+
+# Set up colored logging
+logger = logging.getLogger(__name__)
+fmt = "[%(levelname)s] %(message)s"
+coloredlogs.install(level='DEBUG', logger=logger, fmt=fmt)
+
 
 def return_corpus_text(corpus_file_name):
 
@@ -104,7 +124,14 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
             # Choose the next word randomly from possible words associated with current_seq
             next_word = random.choice(chain[current_seq])
         except KeyError:
-            print("The exact seed word sequence '{}' was not found in the original corpus.".format(seed_words))
+            # not_found_message = f"The exact seed word sequence {Fore.RED}'{seed_words}'{Style.RESET_ALL} was not found in the original corpus."
+            not_found_message = (
+                f"The exact seed word sequence {Fore.RED}"
+                f"'{seed_words}'"
+                f"{Style.RESET_ALL} was not found in the original corpus."
+            )
+
+            logger.info(not_found_message)
             current_seq = random.choice(list(chain.keys()))
             next_word = random.choice(chain[current_seq])
 
