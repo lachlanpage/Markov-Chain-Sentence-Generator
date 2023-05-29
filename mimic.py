@@ -3,7 +3,9 @@ from chatGptApiCall import call_openai_api
 from log_config import configure_logger
 
 # Set up colored logging
-logger = configure_logger(__name__)
+# logger = configure_logger(__name__)
+# Configure logging based on --verbose flag
+# logger = configure_logger(__name__, args.verbose)
 # import logging
 # import coloredlogs
 #
@@ -30,15 +32,21 @@ def main():
     parser.add_argument("-s", "--seed-words", help="Word(s) to seed the Markov search. If not found it will be added to the resulting output. (optional)", default=None)
     # parser.add_argument("-o", "--output", default="output.txt", help="Path to the output file")
     # TODO: Add --verbose to output DEBUG messages
-    # parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+    parser.add_argument("-q", "--quiet", action="store_true", help="Disable logging completely")
 
     # Parse arguments
     args = parser.parse_args()
+
+    # Configure logging based on --verbose flag
+    logger = configure_logger(__name__, args.verbose, args.quiet)
 
     # Print the results
     # print("Input file:", args.input_file)
     # print("Output file:", args.output)
     # print("Verbose mode:", args.verbose)
+    logger.debug("Debug level message")
+    logger.info("Info level message")
 
     if args.input_file is None :
         call_openai_api(None, args.raw_markov, args.similarity_check, args.seed_words)

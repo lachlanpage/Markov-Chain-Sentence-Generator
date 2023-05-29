@@ -11,6 +11,9 @@ from colorama import init, Fore, Style
 from log_config import configure_logger
 
 logger = configure_logger(__name__)
+# logger.info("Starting program")
+# Configure logging based on --verbose flag
+# logger = configure_logger(__name__, args.verbose)
 # Initialize colorama
 init(autoreset=True)
 
