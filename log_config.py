@@ -1,39 +1,28 @@
 import logging
 import coloredlogs
+from config import Config
 
 
-def configure_logger(name, verbose=False, quiet=False):
+def configure_logger(name):
     logger = logging.getLogger(name)
     fmt = "[%(levelname)s] %(message)s"
 
-    if verbose:
-        # coloredlogs.install(level='DEBUG', logger=logger, fmt=fmt)
+    # Use the VERBOSE and QUIET flags from the Config class
+    if Config.VERBOSE:
+
         log_level = 'DEBUG'
-    elif quiet:
-        # coloredlogs.install(level='CRITICAL +1', logger=logger, fmt=fmt)
-        log_level = logging.CRITICAL + 1
+
+    elif Config.QUIET:
+
+        #  Set log level to CRITICAL if QUIET is set
+        log_level = logging.CRITICAL
+
     else:
-        # coloredlogs.install(level='INFO', logger=logger, fmt=fmt)
+
+        # Default to INFO if no flags are set
         log_level = 'INFO'
 
     coloredlogs.install(level=log_level, logger=logger, fmt=fmt)
 
     return logger
 
-    # logger = logging.getLogger(name)
-    # fmt = "[%(levelname)s] %(message)s"
-    #
-    # if verbose:
-    #     coloredlogs.install(level='DEBUG', logger=logger, fmt=fmt)
-    # else:
-    #     coloredlogs.install(level='INFO', logger=logger, fmt=fmt)
-    #
-    # return logger
-    # logger = logging.getLogger(name)
-    # fmt = "[%(levelname)s] %(message)s"
-    #
-    # # coloredlogs.DEFAULT_FIELD_STYLES["levelname"]["info"] = {"color": "white"}
-    # # coloredlogs.DEFAULT_LEVEL_STYLES["info"] = {"color": "white"}
-    # coloredlogs.install(level='DEBUG', logger=logger, fmt=fmt)
-
-    # return logger

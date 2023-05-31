@@ -1,52 +1,34 @@
 import os
 import time
 import requests
-import config
 from n_order_markov import generate_text
 from n_order_markov import convert_word_list_to_string
 from n_order_markov import return_corpus_text
 from similarity_check import check_similarity
-from config import TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH, TEMPERATURE, MAX_TOKENS, NUM_OF_RESPONSES
 from colorama import init, Fore, Style
 from log_config import configure_logger
+from config import Config
 
+# Configure the logger
 logger = configure_logger(__name__)
-# logger.info("Starting program")
-# Configure logging based on --verbose flag
-# logger = configure_logger(__name__, args.verbose)
+
 # Initialize colorama
 init(autoreset=True)
 
-# print(f"{Fore.RED}This is red text.")
-# print(f"{Fore.GREEN}This is green text.")
-# print(f"{Fore.YELLOW}This is yellow text.")
-# print(f"{Fore.CYAN}This is cyan text.")
-# print(f"{Fore.MAGENTA}This is magenta text.")
-# print(f"{Fore.BLUE}This is blue text.")
-# Use "{Style.RESET_ALL}" to reset in the middle of a sentence.
-
-# Set up colored logging
-# logger = logging.getLogger(__name__)
-# fmt = "[%(levelname)s] %(message)s"
-# # Customize field color of INFO level as well (for the [INFO] part)
-# coloredlogs.DEFAULT_FIELD_STYLES["levelname"]["info"] = {"color": "white"}
-# # Customizing the error level color
-# coloredlogs.DEFAULT_LEVEL_STYLES["info"] = {"color": "white"}
-# coloredlogs.install(level='DEBUG', logger=logger, fmt=fmt)
-
-# logger.error("This is an error message in red color.")
-# logger.warning("This is a warning message in yellow color.")
-# logger.info("This is an info message in green color.")
-# logger.debug("This is a debug message in white color.")
 
 def call_openai_api(input_file=None, raw_markov=False, similarity_check=False, seed_words=None):
 
+    # If the user specified a training corpus, use that. Otherwise, use the default.
     if input_file is not None :
-        TRAINING_CORPUS = input_file
-    else:
-        TRAINING_CORPUS = config.TRAINING_CORPUS
 
-    raw_markov_result_string = generate_text(TRAINING_CORPUS, MARKOV_ORDER, RESULT_LENGTH, seed_words)
+        TRAINING_CORPUS = input_file
+
+    else:
+
+        TRAINING_CORPUS = Config.TRAINING_CORPUS
+
+    raw_markov_result_string = generate_text(TRAINING_CORPUS, Config.MARKOV_ORDER, Config.RESULT_LENGTH, seed_words)
+
     # Convert the word list to a string
     sentence = convert_word_list_to_string(raw_markov_result_string)
     api_key = os.environ["GPT_API_KEY"]
@@ -59,9 +41,9 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False, s
         "prompt": "The following sentence may be missing something: \"" + sentence + "\". "
         "Please make the sentence make more sense"
         "And don't return anything but a single sentence. I only want to see one version of the sentence.",
-        "temperature": TEMPERATURE,
-        "max_tokens": MAX_TOKENS,
-        "n": NUM_OF_RESPONSES,
+        "temperature": Config.TEMPERATURE,
+        "max_tokens": Config.MAX_TOKENS,
+        "n": Config.NUM_OF_RESPONSES,
     }
     response = requests.post("https://api.openai.com/v1/completions", headers=headers, json=data)
     if response.status_code == 200:
@@ -90,9 +72,8 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False, s
                 print(f"{Fore.YELLOW}[RAW MARKOV]{Style.RESET_ALL} '{sentence}'")
 
             # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
-            print(f"{Fore.GREEN}[MIMICKED QUOTE]{Style.RESET_ALL} '{corrected_sentence}'")
-
-
+            # print(f"{Fore.GREEN}[MIMICKED QUOTE]{Style.RESET_ALL} '{corrected_sentence}'")
+            print(f"{corrected_sentence}")
 
         else:
             # print("Error: Could not extract the corrected sentence.")

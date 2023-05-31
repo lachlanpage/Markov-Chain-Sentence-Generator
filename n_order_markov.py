@@ -1,39 +1,30 @@
 import random
 from colorama import init, Fore, Style
 from log_config import configure_logger
+from config import Config
 
+# Set up logging
 logger = configure_logger(__name__)
 
 # Initialize colorama
 init(autoreset=True)
 
-# print(f"{Fore.RED}This is red text.")
-# print(f"{Fore.GREEN}This is green text.")
-# print(f"{Fore.YELLOW}This is yellow text.")
-# print(f"{Fore.CYAN}This is cyan text.")
-# print(f"{Fore.MAGENTA}This is magenta text.")
-# print(f"{Fore.BLUE}This is blue text.")
-
-
-# Set up colored logging
-# logger = logging.getLogger(__name__)
-# fmt = "[%(levelname)s] %(message)s"
-# # Customize field color of INFO level as well (for the [INFO] part)
-# coloredlogs.DEFAULT_FIELD_STYLES["levelname"]["info"] = {"color": "white"}
-# # Customizing the error level color
-# coloredlogs.DEFAULT_LEVEL_STYLES["info"] = {"color": "white"}
-# coloredlogs.install(level='DEBUG', logger=logger, fmt=fmt)
-
 
 def return_corpus_text(corpus_file_name):
+    """
+    Read the content of a corpus file and return it as a string.
 
+    Args:
+        corpus_file_name (str): The name or path of the corpus file to read.
+
+    Returns:
+        str: A string containing the entire content of the corpus file.
+    """
     with open(corpus_file_name, 'r') as content_file:
+
         corpus_as_string = content_file.read()
 
     return corpus_as_string
-
-
-# def reference_corpus_text
 
 
 def convert_word_list_to_string(final_output_word_list):
@@ -103,12 +94,15 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
         chain[seq].append(corpus_as_string[i + prefix_length] if i + prefix_length < len(corpus_as_string) else '.')
 
     # Generate the text
-    # start_seq is a tuple that must be the length of the markov order, eg. 2
-    # TODO: Choose the first word(s) of the sentence from STDIN so you can direct the output a bit.
+    # start_seq is a tuple that must be the length of the markov order.
+    # For example, if the markov order is 2, start_seq must be a tuple of length 2.
+    # Start_seq is used to initialize the Markov chain with a starting state.
     # start_seq = ('was', 'looking')
 
     start_seq = None
 
+    # If seed_words was provided by the user, use it to initialize the start_seq.
+    # Otherwise, initialize start_seq randomly from words in the Markov chain.
     if seed_words is not None:
 
         start_seq = tuple(seed_words.split())
@@ -116,7 +110,6 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
     else:
 
         start_seq = random.choice(list(chain.keys()))
-        # print(start_seq)
 
     output_word_list = list(start_seq)
     current_seq = start_seq
@@ -129,16 +122,25 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
         try:
             # Choose the next word randomly from possible words associated with current_seq
             next_word = random.choice(chain[current_seq])
+
         except KeyError:
-            # not_found_message = f"The exact seed word sequence {Fore.RED}'{seed_words}'{Style.RESET_ALL} was not found in the original corpus."
 
-            not_found_message = (
-                f"The exact seed word sequence {Fore.RED}"
-                f"'{seed_words}'"
-                f"{Style.RESET_ALL} was not found in the original corpus."
-            )
+            print(f"Verbose is {Config.VERBOSE}")
+            print(f"Quiet is {Config.QUIET}")
 
-            logger.info(f"{not_found_message}")
+            # Use the VERBOSE and QUIET flags from the Config class
+            if Config.VERBOSE:
+
+                not_found_message = (
+                    f"The exact seed word sequence {Fore.RED}"
+                    f"'{seed_words}'"
+                    f"{Style.RESET_ALL} was not found in the original corpus."
+                )
+
+                logger.warning(f"{not_found_message}")
+
+            # elif Config.QUIET:
+            #     print("Logging is disabled.")
 
             current_seq = random.choice(list(chain.keys()))
             next_word = random.choice(chain[current_seq])
