@@ -125,9 +125,6 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
 
         except KeyError:
 
-            print(f"Verbose is {Config.VERBOSE}")
-            print(f"Quiet is {Config.QUIET}")
-
             # Use the VERBOSE and QUIET flags from the Config class
             if Config.VERBOSE:
 
