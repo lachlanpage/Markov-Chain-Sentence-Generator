@@ -52,7 +52,9 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
     }
 
     if Config.VERBOSE:
-        # print(data)
+
+        print("[" + Fore.YELLOW + "OPENAI API REQUEST" + Style.RESET_ALL + "]")
+
         # Convert the Python object to a formatted JSON string
         pretty_json_str = json.dumps(data, indent=4, sort_keys=True)
 
@@ -61,8 +63,6 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
 
         # Print the colored JSON string
         print(colored_json_str)
-
-        # print(pretty_json_str)
 
     response = requests.post("https://api.openai.com/v1/completions", headers=headers, json=data)
     if response.status_code == 200:
@@ -91,7 +91,20 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
                 print(f"{Fore.YELLOW}[RAW MARKOV]{Style.RESET_ALL} '{sentence}'")
 
             # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
-            # print(f"{Fore.GREEN}[MIMICKED QUOTE]{Style.RESET_ALL} '{corrected_sentence}'")
+
+            if Config.VERBOSE:
+                print(f"[{Fore.YELLOW}OPENAI API RESPONSE{Style.RESET_ALL}]")
+
+
+                # Convert the Python object to a formatted JSON string
+                pretty_json_str = json.dumps(response.json(), default=str, indent=4, sort_keys=True)
+
+                # Colorize the JSON string
+                colored_json_str = highlight(pretty_json_str, JsonLexer(), TerminalFormatter())
+
+                # Print the colored JSON string
+                print(colored_json_str)
+
             print(f"{Fore.LIGHTGREEN_EX}{corrected_sentence}{Fore.RESET}")
 
         else:
