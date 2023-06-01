@@ -1,3 +1,4 @@
+import json
 import os
 import time
 import requests
@@ -8,6 +9,10 @@ from similarity_check import check_similarity
 from colorama import init, Fore, Style
 from log_config import configure_logger
 from config import Config
+from pprint import pprint
+from pygments import highlight
+from pygments.lexers import JsonLexer
+from pygments.formatters import TerminalFormatter
 
 # Configure the logger
 logger = configure_logger(__name__)
@@ -16,7 +21,7 @@ logger = configure_logger(__name__)
 init(autoreset=True)
 
 
-def call_openai_api(input_file=None, raw_markov=False, similarity_check=False, seed_words=None):
+def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_check=False, seed_words=None):
 
     # If the user specified a training corpus, use that. Otherwise, use the default.
     if input_file is not None :
@@ -42,9 +47,23 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False, s
         "Please make the sentence make more sense"
         "And don't return anything but a single sentence. I only want to see one version of the sentence.",
         "temperature": Config.TEMPERATURE,
-        "max_tokens": Config.MAX_TOKENS,
+        "max_tokens": max_tokens,
         "n": Config.NUM_OF_RESPONSES,
     }
+
+    if Config.VERBOSE:
+        # print(data)
+        # Convert the Python object to a formatted JSON string
+        pretty_json_str = json.dumps(data, indent=4, sort_keys=True)
+
+        # Colorize the JSON string
+        colored_json_str = highlight(pretty_json_str, JsonLexer(), TerminalFormatter())
+
+        # Print the colored JSON string
+        print(colored_json_str)
+
+        # print(pretty_json_str)
+
     response = requests.post("https://api.openai.com/v1/completions", headers=headers, json=data)
     if response.status_code == 200:
         corrected_sentence = response.json().get("choices", [{}])[0].get("text", "").strip()
@@ -73,7 +92,7 @@ def call_openai_api(input_file=None, raw_markov=False, similarity_check=False, s
 
             # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
             # print(f"{Fore.GREEN}[MIMICKED QUOTE]{Style.RESET_ALL} '{corrected_sentence}'")
-            print(f"{corrected_sentence}")
+            print(f"{Fore.LIGHTGREEN_EX}{corrected_sentence}{Fore.RESET}")
 
         else:
             # print("Error: Could not extract the corrected sentence.")
