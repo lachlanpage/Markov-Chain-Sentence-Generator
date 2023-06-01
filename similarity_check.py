@@ -37,6 +37,7 @@ def check_similarity(input_text, output_text, window_size, threshold):
             print("Similarity: ", similarity)
             print(output_words)
             print(current_window)
+            # TODO: Keep track of  the similarity score and return its highest value
             return "True"
 
     return "False"

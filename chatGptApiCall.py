@@ -78,7 +78,7 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
 
             too_similar = check_similarity(input_text, output_text, window_size, similarity_threshold)
 
-            logger.info(f"Is the generated text too similar? {too_similar}")
+            logger.info(f"Is the generated text too similar? {too_similar}\n")
 
             # Sleep for a second to give the API call time to finish
             # so that this log message doesn't print below the final output
@@ -88,13 +88,12 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
 
             if raw_markov:
 
-                print(f"{Fore.YELLOW}[RAW MARKOV]{Style.RESET_ALL} '{sentence}'")
+                print(f"[{Fore.YELLOW}RAW MARKOV{Style.RESET_ALL}]\n'{sentence}'\n")
 
             # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
 
             if Config.VERBOSE:
                 print(f"[{Fore.YELLOW}OPENAI API RESPONSE{Style.RESET_ALL}]")
-
 
                 # Convert the Python object to a formatted JSON string
                 pretty_json_str = json.dumps(response.json(), default=str, indent=4, sort_keys=True)
