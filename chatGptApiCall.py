@@ -76,9 +76,20 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
             window_size = 5
             similarity_threshold = 0.35
 
-            too_similar = check_similarity(input_text, output_text, window_size, similarity_threshold)
+            similarity_score, too_similar_bool = check_similarity(input_text, output_text, window_size, similarity_threshold)
 
-            logger.info(f"Is the generated text too similar? {too_similar}\n")
+            print(f"[{Fore.YELLOW}SIMILARITY ANALYSIS{Style.RESET_ALL}]")
+            print(f"Window size: {window_size} words")
+            print(f"Similarity threshold: {similarity_threshold}")
+            print(f"Similarity score: {similarity_score:.2f}")
+
+            if too_similar_bool == True:
+
+                print(f"{Fore.RED}Output text is too similar.{Style.RESET_ALL}")
+
+            else:
+
+                print(f"{Fore.GREEN}Output text is adequately dissimilar.{Style.RESET_ALL}")
 
             # Sleep for a second to give the API call time to finish
             # so that this log message doesn't print below the final output
