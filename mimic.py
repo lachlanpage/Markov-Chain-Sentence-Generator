@@ -40,10 +40,10 @@ def parse_args():
                              "it increases automatically if you specify length. (optional)",
                         default=Config.MAX_TOKENS)
     parser.add_argument("-st", "--similarity-threshold",
-                        help="Similarity threshold for the similarity check (optional)",
+                        help="Floating point similarity threshold for the similarity check (optional)",
                         default=Config.SIMILARITY_THRESHOLD)
     parser.add_argument("-w", "--similarity-window",
-                        help="Similarity window for the similarity check (optional)",
+                        help="Number of consecutive words in the sliding window used for the similarity check (optional)",
                         default=Config.SIMILARITY_WINDOW)
     # TODO:  Add the optional test argument
     # parser.add_argument("-t", "--test", action="store_true", help="Test the API call")

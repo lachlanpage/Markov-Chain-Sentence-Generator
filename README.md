@@ -68,20 +68,31 @@ python chatGptApiCall.py
 # Help output
 
 ```shell
-$ python mimic.py --help
-usage: mimic.py [-h] [-i INPUT_FILE] [-r] [-c] [-s SEED_WORDS]
+$ python mimic.py -h                                                                          
+usage: mimic.py [-h] [-i INPUT_FILE] [-r] [-sc] [-sw SEED_WORDS] [-v] [-q] [-l LENGTH] [-m MAX_TOKENS] [-st SIMILARITY_THRESHOLD]
+                [-w SIMILARITY_WINDOW]
 
 A command line tool to generate random phrases that imitate a literary style based on a training text.
 
 options:
   -h, --help            show this help message and exit
   -i INPUT_FILE, --input-file INPUT_FILE
-                        Path to the input file (optional)
+                        Path to the input file a.k.a the training text (optional)
   -r, --raw-markov      Print the raw Markov result (optional)
-  -c, --similarity-check
+  -sc, --similarity-check
                         Quantify how similar the output is to the original text (optional)
-  -s SEED_WORDS, --seed-words SEED_WORDS
-                        Word(s) to seed the Markov search. If not found it will be added to the resulting output. (optional)
+  -sw SEED_WORDS, --seed-words SEED_WORDS
+                        Word(s) to seed the Markov search. If not found in the original text, it will be prepended to the output. (optional)
+  -v, --verbose         Enable verbose mode
+  -q, --quiet           Disable logging completely
+  -l LENGTH, --length LENGTH
+                        Approximate length of the output (optional)
+  -m MAX_TOKENS, --max-tokens MAX_TOKENS
+                        Maximum number of tokens to generate. If not specified, it increases automatically if you specify length. (optional)
+  -st SIMILARITY_THRESHOLD, --similarity-threshold SIMILARITY_THRESHOLD
+                        Floating point similarity threshold for the similarity check (optional)
+  -w SIMILARITY_WINDOW, --similarity-window SIMILARITY_WINDOW
+                        Number of consecutive words in the sliding window used for the similarity check (optional)
 ```
 
 # Signing up for a ChatGPT-4 API key
