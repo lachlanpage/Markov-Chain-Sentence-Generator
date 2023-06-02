@@ -42,7 +42,7 @@ def parse_args():
     parser.add_argument("-st", "--similarity-threshold",
                         help="Similarity threshold for the similarity check (optional)",
                         default=Config.SIMILARITY_THRESHOLD)
-    parser.add_argument("-sw", "--similarity-window",
+    parser.add_argument("-w", "--similarity-window",
                         help="Similarity window for the similarity check (optional)",
                         default=Config.SIMILARITY_WINDOW)
     # TODO:  Add the optional test argument
@@ -70,6 +70,10 @@ def main():
     # If the user specified a similarity threshold, update the config
     if args.similarity_threshold:
         Config.SIMILARITY_THRESHOLD = float(args.similarity_threshold)
+
+    # If the user specified a similarity window, update the config
+    if args.similarity_window:
+        Config.SIMILARITY_WINDOW = int(args.similarity_window)
 
     logger = configure_logger(__name__)
 

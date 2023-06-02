@@ -73,13 +73,11 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
             # TODO: How to pass reference without calling this again?
             input_text = return_corpus_text(TRAINING_CORPUS)
             output_text = corrected_sentence
-            window_size = 5
-            # similarity_threshold = Config.SIMILARITY_THRESHOLD
 
-            similarity_score, too_similar_bool, overly_similar_phrase = check_similarity(input_text, output_text, window_size, Config.SIMILARITY_THRESHOLD)
+            similarity_score, too_similar_bool, overly_similar_phrase = check_similarity(input_text, output_text, Config.SIMILARITY_WINDOW, Config.SIMILARITY_THRESHOLD)
 
             print(f"[{Fore.YELLOW}SIMILARITY ANALYSIS{Style.RESET_ALL}]")
-            print(f"Window size: {window_size} words")
+            print(f"Window size: {Config.SIMILARITY_WINDOW} words")
             print(f"Similarity threshold: {Config.SIMILARITY_THRESHOLD}")
             print(f"Similarity score: {similarity_score:.2f}")
 

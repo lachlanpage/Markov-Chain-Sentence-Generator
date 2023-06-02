@@ -44,3 +44,8 @@ class Config:
     # text. This is used to prevent the model from generating text that is too similar to the original text.
     # This is a float between 0 and 1.
     SIMILARITY_THRESHOLD = 0.35
+
+    # Set the window size (as the number of words) for the similarity check.
+    # This is used to prevent the model from generating text that is too similar to the original text.
+    # This is an integer.
+    SIMILARITY_WINDOW = 5

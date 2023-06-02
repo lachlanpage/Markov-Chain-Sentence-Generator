@@ -39,6 +39,8 @@ def check_similarity(input_text, output_text, window_size, similarity_threshold)
         if similarity_score > highest_similarity_score:
             highest_similarity_score = similarity_score
 
+
+       # TODO: Track the average of the similarity scores for the entire sliding window.
         # If similarity_score exceeds the similarity_threshold, the output is considered too similar
         if similarity_score >= similarity_threshold:
 
