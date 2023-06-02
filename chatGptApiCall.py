@@ -118,8 +118,13 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
             print(f"{Fore.LIGHTGREEN_EX}{corrected_sentence}{Fore.RESET}")
 
         else:
-            # print("Error: Could not extract the corrected sentence.")
+
             logger.error("Error: Could not extract the corrected sentence.")
     else:
-        # print(f"Error: API call failed with status code {response.status_code}. Response: {response.text}")
-        logger.error(f"Error: API call failed with status code {response.status_code}. Response: {response.text}")
+
+        if response.status_code == 429:
+
+            logger.error("Error: Too many requests. Please try again later.")
+
+        logger.error(f"Error: API call failed with status code {response.status_code}.")
+        logger.error(f"Response: {response.text}")
