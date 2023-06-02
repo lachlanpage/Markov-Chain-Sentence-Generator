@@ -73,19 +73,17 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
             # TODO: How to pass reference without calling this again?
             input_text = return_corpus_text(TRAINING_CORPUS)
             output_text = corrected_sentence
-            window_size = 5
-            similarity_threshold = 0.35
 
-            similarity_score, too_similar_bool = check_similarity(input_text, output_text, window_size, similarity_threshold)
+            similarity_score, too_similar_bool, overly_similar_phrase = check_similarity(input_text, output_text, Config.SIMILARITY_WINDOW, Config.SIMILARITY_THRESHOLD)
 
             print(f"[{Fore.YELLOW}SIMILARITY ANALYSIS{Style.RESET_ALL}]")
-            print(f"Window size: {window_size} words")
-            print(f"Similarity threshold: {similarity_threshold}")
+            print(f"Window size: {Config.SIMILARITY_WINDOW} words")
+            print(f"Similarity threshold: {Config.SIMILARITY_THRESHOLD}")
             print(f"Similarity score: {similarity_score:.2f}")
 
             if too_similar_bool == True:
 
-                print(f"{Fore.RED}Output text is too similar.{Style.RESET_ALL}")
+                print(f"{Fore.RED}Output text is too similar to this phrase: '{overly_similar_phrase}'.{Style.RESET_ALL}")
 
             else:
 
@@ -118,8 +116,13 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
             print(f"{Fore.LIGHTGREEN_EX}{corrected_sentence}{Fore.RESET}")
 
         else:
-            # print("Error: Could not extract the corrected sentence.")
+
             logger.error("Error: Could not extract the corrected sentence.")
     else:
-        # print(f"Error: API call failed with status code {response.status_code}. Response: {response.text}")
-        logger.error(f"Error: API call failed with status code {response.status_code}. Response: {response.text}")
+
+        if response.status_code == 429:
+
+            logger.error("Error: Too many requests. Please try again later.")
+
+        logger.error(f"Error: API call failed with status code {response.status_code}.")
+        logger.error(f"Response: {response.text}")
