@@ -23,6 +23,8 @@ def parse_args():
     parser.add_argument("-m", "--max-tokens", help="Maximum number of tokens to generate. If not specified, "
                                                    "it increases automatically if you specify length. (optional)",
                                                     default=Config.MAX_TOKENS)
+    parser.add_argument("-st", "--similarity-threshold", help="Similarity threshold for the similarity check (optional)",
+                                                    default=Config.SIMILARITY_THRESHOLD)
     # TODO:  Add the optional test argument
     # parser.add_argument("-t", "--test", action="store_true", help="Test the API call")
 
@@ -44,6 +46,10 @@ def main():
     # But if the user specified a max_tokens value, update the config
     if args.max_tokens:
         Config.MAX_TOKENS = int(args.max_tokens)
+
+    # If the user specified a similarity threshold, update the config
+    if args.similarity_threshold:
+        Config.SIMILARITY_THRESHOLD = float(args.similarity_threshold)
 
     logger = configure_logger(__name__)
 

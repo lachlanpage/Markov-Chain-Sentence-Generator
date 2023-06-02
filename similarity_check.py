@@ -41,11 +41,13 @@ def check_similarity(input_text, output_text, window_size, similarity_threshold)
 
         # If similarity_score exceeds the similarity_threshold, the output is considered too similar
         if similarity_score >= similarity_threshold:
-            print("Similarity: ", similarity_score)
-            print(output_words)
-            print(current_window)
-            # TODO: Keep track of  the similarity score and return its highest value
-            return highest_similarity_score, "True"
 
-    return highest_similarity_score, "False"
+            #  Join the current window into a single string
+            overly_similar_phrase = ' '.join(current_window)
+
+            # Return the similarity score and a flag indicating that the
+            # generated output is too similar to the original training corpus.
+            return highest_similarity_score, True, overly_similar_phrase
+
+    return highest_similarity_score, False, None
 

@@ -74,18 +74,18 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
             input_text = return_corpus_text(TRAINING_CORPUS)
             output_text = corrected_sentence
             window_size = 5
-            similarity_threshold = 0.35
+            # similarity_threshold = Config.SIMILARITY_THRESHOLD
 
-            similarity_score, too_similar_bool = check_similarity(input_text, output_text, window_size, similarity_threshold)
+            similarity_score, too_similar_bool, overly_similar_phrase = check_similarity(input_text, output_text, window_size, Config.SIMILARITY_THRESHOLD)
 
             print(f"[{Fore.YELLOW}SIMILARITY ANALYSIS{Style.RESET_ALL}]")
             print(f"Window size: {window_size} words")
-            print(f"Similarity threshold: {similarity_threshold}")
+            print(f"Similarity threshold: {Config.SIMILARITY_THRESHOLD}")
             print(f"Similarity score: {similarity_score:.2f}")
 
             if too_similar_bool == True:
 
-                print(f"{Fore.RED}Output text is too similar.{Style.RESET_ALL}")
+                print(f"{Fore.RED}Output text is too similar to this phrase: '{overly_similar_phrase}'.{Style.RESET_ALL}")
 
             else:
 
