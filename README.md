@@ -1,5 +1,24 @@
 # Literary style imitation using Markov chains and the ChatGPT-4 API
 
+# Examples
+
+## Seeding phrases into the output
+One of the most intriguing features is `--seed-words`, which enables you to seed the output with a phrase that 
+does not exist in the original text. 
+
+```shell
+$ python mimic.py --seed-words "after checking my GPS coordinates"
+After checking my GPS coordinates, an indefinable feeling of despair came over me and we stopped nowhere long enough to face the dishonour and emptiness of bereavement.
+```
+
+## Comparing the similarity of the output to the original text
+
+![similarity-check.png](images%2Fsimilarity-check.png)
+
+![similarity-check2.png](images%2Fsimilarity-check2.png)
+
+# About
+
 This program can be thought of as a "literary style imitation algorithm" because the primary purpose is to mimic the style and tone of the original text. It creates new content based on the input text rather than directly copying existing content.
 
 The difficult parts, the Markov algorithm code, came from the original repository that this was forked from: [Markov-Chain-Sentence-Generator](https://github.com/lachlanpage/Markov-Chain-Sentence-Generator), by Github user [lachlanpage](https://github.com/lachlanpage).
