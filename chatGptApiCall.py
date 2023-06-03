@@ -74,12 +74,13 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
             input_text = return_corpus_text(TRAINING_CORPUS)
             output_text = corrected_sentence
 
-            similarity_score, too_similar_bool, overly_similar_phrase = check_similarity(input_text, output_text, Config.SIMILARITY_WINDOW, Config.SIMILARITY_THRESHOLD)
+            highest_similarity_score, average_similarity_score, too_similar_bool, overly_similar_phrase = check_similarity(input_text, output_text, Config.SIMILARITY_WINDOW, Config.SIMILARITY_THRESHOLD)
 
             print(f"[{Fore.YELLOW}SIMILARITY ANALYSIS{Style.RESET_ALL}]")
             print(f"Window size: {Config.SIMILARITY_WINDOW} words")
             print(f"Similarity threshold: {Config.SIMILARITY_THRESHOLD}")
-            print(f"Similarity score: {similarity_score:.2f}")
+            print(f"Average exceeding similarity score: {average_similarity_score:.2f}")
+            print(f"Highest exceeding similarity score: {highest_similarity_score:.2f}")
 
             if too_similar_bool == True:
 
