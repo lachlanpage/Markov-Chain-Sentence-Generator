@@ -63,8 +63,10 @@ def main():
     # 1 token ~= 0.75 of a word, or about 4 characters
     Config.MAX_TOKENS = int(Config.RESULT_LENGTH * (4 / 3))
 
+    # print(args.max_tokens)
+
     # But if the user specified a max_tokens value, update the config
-    if args.max_tokens:
+    if args.max_tokens > Config.RESULT_LENGTH:
         Config.MAX_TOKENS = int(args.max_tokens)
 
     # If the user specified a similarity threshold, update the config
@@ -76,6 +78,8 @@ def main():
         Config.SIMILARITY_WINDOW = int(args.similarity_window)
 
     logger = configure_logger(__name__)
+
+    # print(Config.MAX_TOKENS)
 
     if args.input_file is None :
         call_openai_api(Config.MAX_TOKENS, None, args.raw_markov, args.similarity_check, args.seed_words)

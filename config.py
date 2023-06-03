@@ -16,8 +16,6 @@ class Config:
     # and it becomes less coherent.
     MARKOV_ORDER = 2
 
-    # TODO: Create a command line option to specify the result length
-    # TODO: Note that MAX_TOKENS must increase with RESULT_LENGTH
     # Set how long of a sentence or paragraph you want in the resulting text.
     RESULT_LENGTH = 30
 
@@ -27,7 +25,6 @@ class Config:
     # will make it more focused and deterministic.
     TEMPERATURE = 0.7
 
-    # TODO: Create a command line option to specify the max tokens
     # Set the maximum number of tokens to generate in the ChatGPT API response.
     # max_tokens is an integer, is optional, and defaults to 16.
     # A helpful rule of thumb is that one token generally corresponds to ~4 characters of text for common
