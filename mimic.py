@@ -66,7 +66,7 @@ def main():
     # print(args.max_tokens)
 
     # But if the user specified a max_tokens value, update the config
-    if args.max_tokens > Config.RESULT_LENGTH:
+    if int(args.max_tokens) > Config.RESULT_LENGTH:
         Config.MAX_TOKENS = int(args.max_tokens)
 
     # If the user specified a similarity threshold, update the config
