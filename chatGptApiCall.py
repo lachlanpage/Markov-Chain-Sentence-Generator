@@ -40,36 +40,48 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
     # Prepare the API request
     data, headers = setup_api_request(max_tokens, sentence)
 
-    if Config.VERBOSE:
+    print_verbose_api_request(data) if Config.VERBOSE else None
 
-        print("[" + Fore.YELLOW + "OPENAI API REQUEST" + Style.RESET_ALL + "]")
+    make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, similarity_check)
 
-        # Convert the Python object to a formatted JSON string
-        pretty_json_str = json.dumps(data, indent=4, sort_keys=True)
 
-        # Colorize the JSON string
-        colored_json_str = highlight(pretty_json_str, JsonLexer(), TerminalFormatter())
+def make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, similarity_check):
+    """
+    Sends a POST request to the OpenAI API, processes the response and prints various outputs and analysis.
 
-        # Print the colored JSON string
-        print(colored_json_str)
+    Args:
+    TRAINING_CORPUS (list): A corpus used for training.
+    data (dict): The request payload containing prompt and other parameters.
+    headers (dict): The request headers containing API key.
+    raw_markov (bool): If True, prints raw Markov chain generated input.
+    sentence (str): The input sentence on which completion will be performed.
+    similarity_check (bool): If True, performs and prints similarity analysis of the output with the given corpus.
 
+    Response JSON structure:
+    {
+        "choices": [
+            {
+                "text": "<corrected_sentence>",
+                ...
+            },
+            ...
+        ],
+        ...
+    }
+
+    """
     response = requests.post("https://api.openai.com/v1/completions", headers=headers, json=data)
     if response.status_code == 200:
 
         corrected_sentences_list = []
         corrected_sentence = ""
 
-        # TODO: Loop through and grab each response if Config.NUM_OF_RESPONSES > 1
+        # Loop through and grab each response if Config.NUM_OF_RESPONSES > 1
         if Config.NUM_OF_RESPONSES > 1:
             for i in range(Config.NUM_OF_RESPONSES):
-
                 corrected_sentences_list.append(response.json().get("choices", [{}])[i].get("text", "").strip())
 
                 corrected_sentence = corrected_sentence + corrected_sentences_list[i] + "\n\n"
-
-                # if Config.VERBOSE:
-                #     print(f"[{Fore.YELLOW}RESPONSE{Style.RESET_ALL}]")
-                #     print(f"    {Fore.GREEN}{response.json().get('choices', [{}])[i].get('text', '').strip()}{Style.RESET_ALL}")
 
         else:
 
@@ -81,26 +93,29 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
             input_text = return_corpus_text(TRAINING_CORPUS)
             output_text = corrected_sentence
 
-            highest_similarity_score, average_similarity_score, too_similar_bool, list_overly_similar_phrases = check_similarity(input_text, output_text, Config.SIMILARITY_WINDOW, Config.SIMILARITY_THRESHOLD)
+            highest_similarity_score, average_similarity_score, too_similar_bool, list_overly_similar_phrases = check_similarity(
+                input_text, output_text, Config.SIMILARITY_WINDOW, Config.SIMILARITY_THRESHOLD)
 
             print(f"[{Fore.YELLOW}SIMILARITY ANALYSIS{Style.RESET_ALL}]")
             print(f"    Window size: {Fore.LIGHTCYAN_EX}{Config.SIMILARITY_WINDOW}{Style.RESET_ALL} words")
             print(f"    Similarity threshold: {Fore.LIGHTCYAN_EX}{Config.SIMILARITY_THRESHOLD}{Style.RESET_ALL}")
 
             if too_similar_bool == False:
-
                 print(f"    Average similarity score: {Fore.GREEN}{average_similarity_score:.2f}{Style.RESET_ALL}")
                 print(f"    Highest similarity score: {Fore.GREEN}{highest_similarity_score:.2f}{Style.RESET_ALL}")
 
             if too_similar_bool == True:
 
-                print(f"    Average exceeding similarity score: {Fore.RED}{average_similarity_score:.2f}{Style.RESET_ALL}")
-                print(f"    Highest exceeding similarity score: {Fore.RED}{highest_similarity_score:.2f}{Style.RESET_ALL}")
+                print(
+                    f"    Average exceeding similarity score: {Fore.RED}{average_similarity_score:.2f}{Style.RESET_ALL}")
+                print(
+                    f"    Highest exceeding similarity score: {Fore.RED}{highest_similarity_score:.2f}{Style.RESET_ALL}")
 
                 # Create a string with list elements on separate lines, indented by four spaces
                 formatted_list = '\n        '.join(list_overly_similar_phrases)
 
-                print(f"    Output text is too similar to these phrases:\n        {Fore.RED}{formatted_list}{Style.RESET_ALL}")
+                print(
+                    f"    Output text is too similar to these phrases:\n        {Fore.RED}{formatted_list}{Style.RESET_ALL}")
 
             else:
 
@@ -113,7 +128,6 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
         if corrected_sentence:
 
             if raw_markov:
-
                 print(f"[{Fore.YELLOW}RAW MARKOV{Style.RESET_ALL}]\n'{sentence}'\n")
 
             # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
@@ -138,11 +152,20 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
     else:
 
         if response.status_code == 429:
-
             logger.error("Error: Too many requests. Please try again later.")
 
         logger.error(f"Error: API call failed with status code {response.status_code}.")
         logger.error(f"Response: {response.text}")
+
+
+def print_verbose_api_request(data):
+    print("[" + Fore.YELLOW + "OPENAI API REQUEST" + Style.RESET_ALL + "]")
+    # Convert the Python object to a formatted JSON string
+    pretty_json_str = json.dumps(data, indent=4, sort_keys=True)
+    # Colorize the JSON string
+    colored_json_str = highlight(pretty_json_str, JsonLexer(), TerminalFormatter())
+    # Print the colored JSON string
+    print(colored_json_str)
 
 
 def setup_api_request(max_tokens, sentence):
