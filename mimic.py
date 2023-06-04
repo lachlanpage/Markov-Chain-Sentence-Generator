@@ -54,6 +54,9 @@ def parse_args():
 
     return parser.parse_args()
 
+def clamp(value, min_value, max_value):
+    return max(min(value, max_value), min_value)
+
 
 def main():
 
@@ -86,9 +89,21 @@ def main():
 
         Config.NUM_OF_RESPONSES = int(args.number_of_responses)
 
-    logger = configure_logger(__name__)
+        # Adjust the temperature value based on the number of responses
+        # Higher number also increases temperature and increases likelihood of repetition
+        # Config.TEMPERATURE = Config.TEMPERATURE * 1.75
 
-    # print(Config.MAX_TOKENS)
+        if Config.NUM_OF_RESPONSES > 1:
+            # Increase temperature proportionally to the number of responses or by any custom factor
+            Config.TEMPERATURE += Config.NUM_OF_RESPONSES * 0.25
+
+        # Clamp the temperature to be within the range [0, 2]
+        temperature = clamp(Config.TEMPERATURE, 0, 2)
+
+
+
+
+    logger = configure_logger(__name__)
 
     if args.input_file is None :
         call_openai_api(Config.MAX_TOKENS, None, args.raw_markov, args.similarity_check, args.seed_words)
