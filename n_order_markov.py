@@ -28,6 +28,15 @@ def return_corpus_text(corpus_file_name):
 
 
 def convert_word_list_to_string(final_output_word_list):
+    """
+    Convert a list of words into a single string joined by spaces.
+
+    Args:
+        final_output_word_list (List[str]): A list of individual words.
+
+    Returns:
+        str: The combined sentence as a single string.
+    """
     return ' '.join(final_output_word_list)
 
 

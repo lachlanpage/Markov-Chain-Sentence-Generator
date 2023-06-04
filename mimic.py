@@ -45,10 +45,28 @@ def parse_args():
     parser.add_argument("-w", "--similarity-window",
                         help="Number of consecutive words in the sliding window used for the similarity check (optional)",
                         default=Config.SIMILARITY_WINDOW)
+    parser.add_argument("-n", "--number_of_responses",
+                        help="Number of responses to generate. Higher number also increases temperature and increases likelihood of repetition(optional)",
+                        default=Config.NUM_OF_RESPONSES)
+
     # TODO:  Add the optional test argument
     # parser.add_argument("-t", "--test", action="store_true", help="Test the API call")
 
     return parser.parse_args()
+
+def clamp(value, min_value, max_value):
+    """
+    Clamp a given value between a minimum and maximum value.
+
+    Args:
+        value (float): The value to be clamped.
+        min_value (float): The lower bound for the clamped value.
+        max_value (float): The upper bound for the clamped value.
+
+    Returns:
+        float: The clamped value limited to the range [min_value, max_value].
+    """
+    return max(min(value, max_value), min_value)
 
 
 def main():
@@ -77,9 +95,26 @@ def main():
     if args.similarity_window:
         Config.SIMILARITY_WINDOW = int(args.similarity_window)
 
-    logger = configure_logger(__name__)
+    # If the user specified a number of responses, update the config
+    if args.number_of_responses:
 
-    # print(Config.MAX_TOKENS)
+        Config.NUM_OF_RESPONSES = int(args.number_of_responses)
+
+        # Adjust the temperature value based on the number of responses
+        # Higher number also increases temperature and increases likelihood of repetition
+        # Config.TEMPERATURE = Config.TEMPERATURE * 1.75
+
+        if Config.NUM_OF_RESPONSES > 1:
+            # Increase temperature proportionally to the number of responses or by any custom factor
+            Config.TEMPERATURE += Config.NUM_OF_RESPONSES * 0.25
+
+        # Clamp the temperature to be within the range [0, 2]
+        temperature = clamp(Config.TEMPERATURE, 0, 2)
+
+
+
+
+    logger = configure_logger(__name__)
 
     if args.input_file is None :
         call_openai_api(Config.MAX_TOKENS, None, args.raw_markov, args.similarity_check, args.seed_words)
