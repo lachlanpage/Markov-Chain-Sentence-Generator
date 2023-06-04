@@ -33,9 +33,10 @@ class Config:
     MAX_TOKENS = 50
 
     # TODO: Create a command line option to specify the number of responses
+    # TODO: When this is > 1, increase the temperature parameter above to get more creative responses.
     # The "n" parameter in the API call to ChatGPT is used to specify the number of different responses you want the
     # model to generate. Setting "n" to 1 means that only one version of the sentence will be returned.
-    NUM_OF_RESPONSES = 1
+    NUM_OF_RESPONSES = 2
 
     # Within each similarity window, set the maximum allowable similarity between the generated text and the original
     # text. This is used to prevent the model from generating text that is too similar to the original text.

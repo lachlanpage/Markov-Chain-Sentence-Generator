@@ -45,6 +45,10 @@ def parse_args():
     parser.add_argument("-w", "--similarity-window",
                         help="Number of consecutive words in the sliding window used for the similarity check (optional)",
                         default=Config.SIMILARITY_WINDOW)
+    parser.add_argument("-n", "--number_of_responses",
+                        help="Number of responses to generate. Higher number also increases temperature and increases likelihood of repetition(optional)",
+                        default=Config.NUM_OF_RESPONSES)
+
     # TODO:  Add the optional test argument
     # parser.add_argument("-t", "--test", action="store_true", help="Test the API call")
 
@@ -76,6 +80,11 @@ def main():
     # If the user specified a similarity window, update the config
     if args.similarity_window:
         Config.SIMILARITY_WINDOW = int(args.similarity_window)
+
+    # If the user specified a number of responses, update the config
+    if args.number_of_responses:
+
+        Config.NUM_OF_RESPONSES = int(args.number_of_responses)
 
     logger = configure_logger(__name__)
 

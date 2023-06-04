@@ -66,7 +66,25 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
 
     response = requests.post("https://api.openai.com/v1/completions", headers=headers, json=data)
     if response.status_code == 200:
-        corrected_sentence = response.json().get("choices", [{}])[0].get("text", "").strip()
+
+        corrected_sentences_list = []
+        corrected_sentence = ""
+
+        # TODO: Loop through and grab each response if Config.NUM_OF_RESPONSES > 1
+        if Config.NUM_OF_RESPONSES > 1:
+            for i in range(Config.NUM_OF_RESPONSES):
+
+                corrected_sentences_list.append(response.json().get("choices", [{}])[i].get("text", "").strip())
+
+                corrected_sentence = corrected_sentence + corrected_sentences_list[i] + "\n\n"
+
+                # if Config.VERBOSE:
+                #     print(f"[{Fore.YELLOW}RESPONSE{Style.RESET_ALL}]")
+                #     print(f"    {Fore.GREEN}{response.json().get('choices', [{}])[i].get('text', '').strip()}{Style.RESET_ALL}")
+
+        else:
+
+            corrected_sentence = response.json().get("choices", [{}])[0].get("text", "").strip()
 
         if similarity_check:
 
