@@ -55,6 +55,17 @@ def parse_args():
     return parser.parse_args()
 
 def clamp(value, min_value, max_value):
+    """
+    Clamp a given value between a minimum and maximum value.
+
+    Args:
+        value (float): The value to be clamped.
+        min_value (float): The lower bound for the clamped value.
+        max_value (float): The upper bound for the clamped value.
+
+    Returns:
+        float: The clamped value limited to the range [min_value, max_value].
+    """
     return max(min(value, max_value), min_value)
 
 

@@ -36,20 +36,9 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
 
     # Convert the word list to a string
     sentence = convert_word_list_to_string(raw_markov_result_string)
-    api_key = os.environ["GPT_API_KEY"]
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json",
-    }
-    data = {
-        "model": "text-davinci-003",
-        "prompt": "The following sentence may be missing something: \"" + sentence + "\". "
-        "Please make the sentence make more sense"
-        "And don't return anything but a single sentence. I only want to see one version of the sentence.",
-        "temperature": Config.TEMPERATURE,
-        "max_tokens": max_tokens,
-        "n": Config.NUM_OF_RESPONSES,
-    }
+
+    # Prepare the API request
+    data, headers = setup_api_request(max_tokens, sentence)
 
     if Config.VERBOSE:
 
@@ -154,3 +143,33 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
 
         logger.error(f"Error: API call failed with status code {response.status_code}.")
         logger.error(f"Response: {response.text}")
+
+
+def setup_api_request(max_tokens, sentence):
+    """
+    Prepare data and headers for calling the OpenAI GPT API with a specific prompt.
+
+    Args:
+        max_tokens (int): Maximum number of tokens to include in the model's response.
+        sentence (str): The input sentence to be processed by the API.
+
+    Returns:
+        tuple: A tuple containing two dictionaries:
+               1. data - Dictionary with parameters to be sent to the GPT API.
+               2. headers - Dictionary with authorization information needed to make the API request.
+    """
+    api_key = os.environ["GPT_API_KEY"]
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+    data = {
+        "model": "text-davinci-003",
+        "prompt": "The following sentence may be missing something: \"" + sentence + "\". "
+                                                                                     "Please make the sentence make more sense"
+                                                                                     "And don't return anything but a single sentence. I only want to see one version of the sentence.",
+        "temperature": Config.TEMPERATURE,
+        "max_tokens": max_tokens,
+        "n": Config.NUM_OF_RESPONSES,
+    }
+    return data, headers

@@ -10,7 +10,16 @@ logger = configure_logger(__name__)
 
 
 def get_corpus_string(corpus_as_string):
+    """
+    Return the input string without any modification.
+    Useful for importing the corpus from another Python file that already converted it to a string.
 
+    Args:
+        corpus_as_string (str): A string representing a text corpus.
+
+    Returns:
+        str: The same input string.
+    """
     return corpus_as_string
 
 
