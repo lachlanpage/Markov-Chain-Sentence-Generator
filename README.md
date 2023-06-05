@@ -21,7 +21,7 @@ After checking my GPS coordinates, an indefinable feeling of despair came over m
 
 This program can be thought of as a "literary style imitation algorithm" because the primary purpose is to mimic the style and tone of the original text. It creates new content based on the input text rather than directly copying existing content.
 
-The difficult parts, the Markov algorithm code, came from the original repository that this was forked from: [Markov-Chain-Sentence-Generator](https://github.com/lachlanpage/Markov-Chain-Sentence-Generator), by Github user [lachlanpage](https://github.com/lachlanpage).
+The difficult parts, the Markov algorithm code, came from the original repository that this was forked from: [Markov-Chain-Sentence-Generator](https://github.com/lachlanpage/Markov-Chain-Sentence-Generator), by GitHub user [lachlanpage](https://github.com/lachlanpage).
 
 The overall algorithm does this:
 1. *Input*: a text file whose style you want to imitate.

@@ -1,18 +1,18 @@
 import json
 import os
 import time
+
 import requests
-from n_order_markov import generate_text
+from colorama import init, Fore, Style
+from pygments import highlight
+from pygments.formatters import TerminalFormatter
+from pygments.lexers import JsonLexer
+from config import Config
+from log_config import configure_logger
 from n_order_markov import convert_word_list_to_string
+from n_order_markov import generate_text
 from n_order_markov import return_corpus_text
 from similarity_check import check_similarity
-from colorama import init, Fore, Style
-from log_config import configure_logger
-from config import Config
-from pprint import pprint
-from pygments import highlight
-from pygments.lexers import JsonLexer
-from pygments.formatters import TerminalFormatter
 
 # Configure the logger
 logger = configure_logger(__name__)
@@ -22,10 +22,10 @@ init(autoreset=True)
 
 
 def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_check=False, seed_words=None):
-
     # If the user specified a training corpus, use that. Otherwise, use the default.
-    if input_file is not None :
+    if input_file is not None:
 
+        # TODO: Test this. It might need to be Config.TRAINING_CORPUS_PATH
         TRAINING_CORPUS = input_file
 
     else:
@@ -140,11 +140,11 @@ def print_similarity_check(TRAINING_CORPUS, corrected_sentence, similarity_check
         print(f"    Window size: {Fore.LIGHTCYAN_EX}{Config.SIMILARITY_WINDOW}{Style.RESET_ALL} words")
         print(f"    Similarity threshold: {Fore.LIGHTCYAN_EX}{Config.SIMILARITY_THRESHOLD}{Style.RESET_ALL}")
 
-        if too_similar_bool == False:
+        if not too_similar_bool:
             print(f"    Average similarity score: {Fore.GREEN}{average_similarity_score:.2f}{Style.RESET_ALL}")
             print(f"    Highest similarity score: {Fore.GREEN}{highest_similarity_score:.2f}{Style.RESET_ALL}")
 
-        if too_similar_bool == True:
+        if too_similar_bool:
 
             print(
                 f"    Average exceeding similarity score: {Fore.RED}{average_similarity_score:.2f}{Style.RESET_ALL}")

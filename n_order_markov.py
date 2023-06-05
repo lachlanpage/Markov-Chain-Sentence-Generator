@@ -21,7 +21,6 @@ def return_corpus_text(corpus_file_name):
         str: A string containing the entire content of the corpus file.
     """
     with open(corpus_file_name, 'r') as content_file:
-
         corpus_as_string = content_file.read()
 
     return corpus_as_string
@@ -54,6 +53,7 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
 
     Prints:
       The generated text based on the provided parameters.
+      :param seed_words:
     """
     # with open(corpus_file_name, 'r') as content_file:
     #     corpus_as_string = content_file.read()
@@ -80,8 +80,7 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
     # This code snippet is typically found in implementations of Markov chain text generation algorithms, where chain
     # serves as a transition dictionary. The key-value pair being set here initializes the starting state for the
     # chain with a predetermined tuple of a specific length (determined by prefix_length).
-    chain = {}
-    chain[tuple(['.'] * prefix_length)] = [' ']
+    chain = {tuple(['.'] * prefix_length): [' ']}
 
     # Build the transition dictionary by iterating through the text in corpus_as_string, extracting
     # subsequences of length prefix_length and updating the transition dictionary:
@@ -94,7 +93,6 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
 
         # Check if the sequence seq is not in the chain dictionary yet.
         if seq not in chain:
-
             # If it's not, create a new empty list as the value for the key seq.
             chain[seq] = []
 
@@ -123,7 +121,6 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
     output_word_list = list(start_seq)
     current_seq = start_seq
 
-
     # This loop generates a sequence of words using a Markov chain, where chain is a dictionary
     # representing the transitions between words. Loop output_words_length times
     for i in range(output_words_length):
@@ -136,7 +133,6 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
 
             # Use the VERBOSE and QUIET flags from the Config class
             if Config.VERBOSE:
-
                 not_found_message = (
                     f"The exact seed word sequence {Fore.RED}"
                     f"'{seed_words}'"
@@ -168,5 +164,3 @@ def generate_text(corpus_file_name, prefix_length, output_words_length, seed_wor
     # print(' '.join(output_word_list))
 
     return output_word_list
-
-
