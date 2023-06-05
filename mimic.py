@@ -1,15 +1,14 @@
 import argparse
-import math
 
 from chatGptApiCall import call_openai_api
-from log_config import configure_logger
 from config import Config
+from log_config import configure_logger
 
 
 def parse_args():
-
     # Create the argument parser
-    parser = argparse.ArgumentParser(description="A command line tool to generate random phrases that imitate a literary style based on a training text.")
+    parser = argparse.ArgumentParser(
+        description="A command line tool to generate random phrases that imitate a literary style based on a training text.")
 
     # Add arguments
     # Add the optional input file argument
@@ -54,6 +53,7 @@ def parse_args():
 
     return parser.parse_args()
 
+
 def clamp(value, min_value, max_value):
     """
     Clamp a given value between a minimum and maximum value.
@@ -70,7 +70,6 @@ def clamp(value, min_value, max_value):
 
 
 def main():
-
     args = parse_args()
 
     # Update the config based on the parsed arguments
@@ -109,17 +108,15 @@ def main():
             Config.TEMPERATURE += Config.NUM_OF_RESPONSES * 0.25
 
         # Clamp the temperature to be within the range [0, 2]
-        temperature = clamp(Config.TEMPERATURE, 0, 2)
+        Config.TEMPERATURE = clamp(Config.TEMPERATURE, 0, 2)
 
+    configure_logger(__name__)
 
-
-
-    logger = configure_logger(__name__)
-
-    if args.input_file is None :
+    if args.input_file is None:
         call_openai_api(Config.MAX_TOKENS, None, args.raw_markov, args.similarity_check, args.seed_words)
     else:
         call_openai_api(Config.MAX_TOKENS, args.input_file, args.raw_markov, args.similarity_check, args.seed_words)
+
 
 if __name__ == "__main__":
     main()

@@ -1,18 +1,18 @@
 import json
 import os
 import time
+
 import requests
-from n_order_markov import generate_text
+from colorama import init, Fore, Style
+from pygments import highlight
+from pygments.formatters import TerminalFormatter
+from pygments.lexers import JsonLexer
+from config import Config
+from log_config import configure_logger
 from n_order_markov import convert_word_list_to_string
+from n_order_markov import generate_text
 from n_order_markov import return_corpus_text
 from similarity_check import check_similarity
-from colorama import init, Fore, Style
-from log_config import configure_logger
-from config import Config
-from pprint import pprint
-from pygments import highlight
-from pygments.lexers import JsonLexer
-from pygments.formatters import TerminalFormatter
 
 # Configure the logger
 logger = configure_logger(__name__)
@@ -22,17 +22,16 @@ init(autoreset=True)
 
 
 def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_check=False, seed_words=None):
-
     # If the user specified a training corpus, use that. Otherwise, use the default.
-    if input_file is not None :
+    if input_file is not None:
 
-        TRAINING_CORPUS = input_file
+        training_corpus = input_file
 
     else:
 
-        TRAINING_CORPUS = Config.TRAINING_CORPUS
+        training_corpus = Config.TRAINING_CORPUS
 
-    raw_markov_result_string = generate_text(TRAINING_CORPUS, Config.MARKOV_ORDER, Config.RESULT_LENGTH, seed_words)
+    raw_markov_result_string = generate_text(training_corpus, Config.MARKOV_ORDER, Config.RESULT_LENGTH, seed_words)
 
     # Convert the word list to a string
     sentence = convert_word_list_to_string(raw_markov_result_string)
@@ -42,15 +41,15 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
 
     print_verbose_api_request(data) if Config.VERBOSE else None
 
-    make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, similarity_check)
+    make_api_request(training_corpus, data, headers, raw_markov, sentence, similarity_check)
 
 
-def make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, similarity_check):
+def make_api_request(training_corpus, data, headers, raw_markov, sentence, similarity_check):
     """
     Sends a POST request to the OpenAI API, processes the response and prints various outputs and analysis.
 
     Args:
-    TRAINING_CORPUS (list): A corpus used for training.
+    training_corpus (list): A corpus used for training.
     data (dict): The request payload containing prompt and other parameters.
     headers (dict): The request headers containing API key.
     raw_markov (bool): If True, prints raw Markov chain generated input.
@@ -87,68 +86,9 @@ def make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, simil
 
             corrected_sentence = response.json().get("choices", [{}])[0].get("text", "").strip()
 
-        if similarity_check:
+        print_similarity_check(training_corpus, corrected_sentence, similarity_check)
 
-            # TODO: How to pass reference without calling this again?
-            input_text = return_corpus_text(TRAINING_CORPUS)
-            output_text = corrected_sentence
-
-            highest_similarity_score, average_similarity_score, too_similar_bool, list_overly_similar_phrases = check_similarity(
-                input_text, output_text, Config.SIMILARITY_WINDOW, Config.SIMILARITY_THRESHOLD)
-
-            print(f"[{Fore.YELLOW}SIMILARITY ANALYSIS{Style.RESET_ALL}]")
-            print(f"    Window size: {Fore.LIGHTCYAN_EX}{Config.SIMILARITY_WINDOW}{Style.RESET_ALL} words")
-            print(f"    Similarity threshold: {Fore.LIGHTCYAN_EX}{Config.SIMILARITY_THRESHOLD}{Style.RESET_ALL}")
-
-            if too_similar_bool == False:
-                print(f"    Average similarity score: {Fore.GREEN}{average_similarity_score:.2f}{Style.RESET_ALL}")
-                print(f"    Highest similarity score: {Fore.GREEN}{highest_similarity_score:.2f}{Style.RESET_ALL}")
-
-            if too_similar_bool == True:
-
-                print(
-                    f"    Average exceeding similarity score: {Fore.RED}{average_similarity_score:.2f}{Style.RESET_ALL}")
-                print(
-                    f"    Highest exceeding similarity score: {Fore.RED}{highest_similarity_score:.2f}{Style.RESET_ALL}")
-
-                # Create a string with list elements on separate lines, indented by four spaces
-                formatted_list = '\n        '.join(list_overly_similar_phrases)
-
-                print(
-                    f"    Output text is too similar to these phrases:\n        {Fore.RED}{formatted_list}{Style.RESET_ALL}")
-
-            else:
-
-                print(f"    {Fore.GREEN}Output text is adequately dissimilar.{Style.RESET_ALL}")
-
-            # Sleep for a second to give the API call time to finish
-            # so that this log message doesn't print below the final output
-            time.sleep(1)
-
-        if corrected_sentence:
-
-            if raw_markov:
-                print(f"[{Fore.YELLOW}RAW MARKOV{Style.RESET_ALL}]\n'{sentence}'\n")
-
-            # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
-
-            if Config.VERBOSE:
-                print(f"[{Fore.YELLOW}OPENAI API RESPONSE{Style.RESET_ALL}]")
-
-                # Convert the Python object to a formatted JSON string
-                pretty_json_str = json.dumps(response.json(), default=str, indent=4, sort_keys=True)
-
-                # Colorize the JSON string
-                colored_json_str = highlight(pretty_json_str, JsonLexer(), TerminalFormatter())
-
-                # Print the colored JSON string
-                print(colored_json_str)
-
-            print(f"{Fore.LIGHTGREEN_EX}{corrected_sentence}{Fore.RESET}")
-
-        else:
-
-            logger.error("Error: Could not extract the corrected sentence.")
+        print_corrected_sentence(corrected_sentence, raw_markov, response, sentence)
     else:
 
         if response.status_code == 429:
@@ -156,6 +96,73 @@ def make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, simil
 
         logger.error(f"Error: API call failed with status code {response.status_code}.")
         logger.error(f"Response: {response.text}")
+
+
+def print_corrected_sentence(corrected_sentence, raw_markov, response, sentence):
+    if corrected_sentence:
+
+        if raw_markov:
+            print(f"[{Fore.YELLOW}RAW MARKOV{Style.RESET_ALL}]\n'{sentence}'\n")
+
+        # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
+
+        if Config.VERBOSE:
+            print(f"[{Fore.YELLOW}OPENAI API RESPONSE{Style.RESET_ALL}]")
+
+            # Convert the Python object to a formatted JSON string
+            pretty_json_str = json.dumps(response.json(), default=str, indent=4, sort_keys=True)
+
+            # Colorize the JSON string
+            colored_json_str = highlight(pretty_json_str, JsonLexer(), TerminalFormatter())
+
+            # Print the colored JSON string
+            print(colored_json_str)
+
+        print(f"{Fore.LIGHTGREEN_EX}{corrected_sentence}{Fore.RESET}")
+
+    else:
+
+        logger.error("Error: Could not extract the corrected sentence.")
+
+
+def print_similarity_check(TRAINING_CORPUS, corrected_sentence, similarity_check):
+    if similarity_check:
+
+        # TODO: How to pass reference without calling this again?
+        input_text = return_corpus_text(TRAINING_CORPUS)
+        output_text = corrected_sentence
+
+        highest_similarity_score, average_similarity_score, too_similar_bool, list_overly_similar_phrases = check_similarity(
+            input_text, output_text, Config.SIMILARITY_WINDOW, Config.SIMILARITY_THRESHOLD)
+
+        print(f"[{Fore.YELLOW}SIMILARITY ANALYSIS{Style.RESET_ALL}]")
+        print(f"    Window size: {Fore.LIGHTCYAN_EX}{Config.SIMILARITY_WINDOW}{Style.RESET_ALL} words")
+        print(f"    Similarity threshold: {Fore.LIGHTCYAN_EX}{Config.SIMILARITY_THRESHOLD}{Style.RESET_ALL}")
+
+        if not too_similar_bool:
+            print(f"    Average similarity score: {Fore.GREEN}{average_similarity_score:.2f}{Style.RESET_ALL}")
+            print(f"    Highest similarity score: {Fore.GREEN}{highest_similarity_score:.2f}{Style.RESET_ALL}")
+
+        if too_similar_bool:
+
+            print(
+                f"    Average exceeding similarity score: {Fore.RED}{average_similarity_score:.2f}{Style.RESET_ALL}")
+            print(
+                f"    Highest exceeding similarity score: {Fore.RED}{highest_similarity_score:.2f}{Style.RESET_ALL}")
+
+            # Create a string with list elements on separate lines, indented by four spaces
+            formatted_list = '\n        '.join(list_overly_similar_phrases)
+
+            print(
+                f"    Output text is too similar to these phrases:\n        {Fore.RED}{formatted_list}{Style.RESET_ALL}")
+
+        else:
+
+            print(f"    {Fore.GREEN}Output text is adequately dissimilar.{Style.RESET_ALL}")
+
+        # Sleep for a second to give the API call time to finish
+        # so that this log message doesn't print below the final output
+        time.sleep(1)
 
 
 def print_verbose_api_request(data):

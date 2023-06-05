@@ -1,6 +1,7 @@
 import difflib
+from typing import Tuple
+
 from log_config import configure_logger
-from typing import Tuple, List
 
 logger = configure_logger(__name__)
 
