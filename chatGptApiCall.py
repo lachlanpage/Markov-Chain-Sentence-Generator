@@ -1,7 +1,6 @@
 import json
 import os
 import time
-
 import requests
 from colorama import init, Fore, Style
 from pygments import highlight
@@ -9,10 +8,11 @@ from pygments.formatters import TerminalFormatter
 from pygments.lexers import JsonLexer
 from config import Config
 from log_config import configure_logger
-from n_order_markov import convert_word_list_to_string
-from n_order_markov import generate_text
-from n_order_markov import return_corpus_text
 from similarity_check import check_similarity
+from text_utilities import TextGenerator
+
+# Create an instance of TextGenerator
+text_generator = TextGenerator()
 
 # Configure the logger
 logger = configure_logger(__name__)
@@ -31,10 +31,11 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
 
         training_corpus = Config.TRAINING_CORPUS
 
-    raw_markov_result_string = generate_text(training_corpus, Config.MARKOV_ORDER, Config.RESULT_LENGTH, seed_words)
+    raw_markov_result_string = text_generator.generate_text(
+        training_corpus, Config.MARKOV_ORDER, Config.RESULT_LENGTH, seed_words)
 
     # Convert the word list to a string
-    sentence = convert_word_list_to_string(raw_markov_result_string)
+    sentence = text_generator.convert_word_list_to_string(raw_markov_result_string)
 
     # Prepare the API request
     data, headers = setup_api_request(max_tokens, sentence)
@@ -129,7 +130,7 @@ def print_similarity_check(TRAINING_CORPUS, corrected_sentence, similarity_check
     if similarity_check:
 
         # TODO: How to pass reference without calling this again?
-        input_text = return_corpus_text(TRAINING_CORPUS)
+        input_text = text_generator.return_corpus_text(TRAINING_CORPUS)
         output_text = corrected_sentence
 
         highest_similarity_score, average_similarity_score, too_similar_bool, list_overly_similar_phrases = check_similarity(
