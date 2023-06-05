@@ -89,30 +89,7 @@ def make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, simil
 
         print_similarity_check(TRAINING_CORPUS, corrected_sentence, similarity_check)
 
-        if corrected_sentence:
-
-            if raw_markov:
-                print(f"[{Fore.YELLOW}RAW MARKOV{Style.RESET_ALL}]\n'{sentence}'\n")
-
-            # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
-
-            if Config.VERBOSE:
-                print(f"[{Fore.YELLOW}OPENAI API RESPONSE{Style.RESET_ALL}]")
-
-                # Convert the Python object to a formatted JSON string
-                pretty_json_str = json.dumps(response.json(), default=str, indent=4, sort_keys=True)
-
-                # Colorize the JSON string
-                colored_json_str = highlight(pretty_json_str, JsonLexer(), TerminalFormatter())
-
-                # Print the colored JSON string
-                print(colored_json_str)
-
-            print(f"{Fore.LIGHTGREEN_EX}{corrected_sentence}{Fore.RESET}")
-
-        else:
-
-            logger.error("Error: Could not extract the corrected sentence.")
+        print_corrected_sentence(corrected_sentence, raw_markov, response, sentence)
     else:
 
         if response.status_code == 429:
@@ -120,6 +97,33 @@ def make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, simil
 
         logger.error(f"Error: API call failed with status code {response.status_code}.")
         logger.error(f"Response: {response.text}")
+
+
+def print_corrected_sentence(corrected_sentence, raw_markov, response, sentence):
+    if corrected_sentence:
+
+        if raw_markov:
+            print(f"[{Fore.YELLOW}RAW MARKOV{Style.RESET_ALL}]\n'{sentence}'\n")
+
+        # TODO: Strip off surrounding quotes if present. They are intermittently present in the response
+
+        if Config.VERBOSE:
+            print(f"[{Fore.YELLOW}OPENAI API RESPONSE{Style.RESET_ALL}]")
+
+            # Convert the Python object to a formatted JSON string
+            pretty_json_str = json.dumps(response.json(), default=str, indent=4, sort_keys=True)
+
+            # Colorize the JSON string
+            colored_json_str = highlight(pretty_json_str, JsonLexer(), TerminalFormatter())
+
+            # Print the colored JSON string
+            print(colored_json_str)
+
+        print(f"{Fore.LIGHTGREEN_EX}{corrected_sentence}{Fore.RESET}")
+
+    else:
+
+        logger.error("Error: Could not extract the corrected sentence.")
 
 
 def print_similarity_check(TRAINING_CORPUS, corrected_sentence, similarity_check):
