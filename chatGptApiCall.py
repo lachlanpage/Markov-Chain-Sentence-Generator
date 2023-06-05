@@ -87,43 +87,7 @@ def make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, simil
 
             corrected_sentence = response.json().get("choices", [{}])[0].get("text", "").strip()
 
-        if similarity_check:
-
-            # TODO: How to pass reference without calling this again?
-            input_text = return_corpus_text(TRAINING_CORPUS)
-            output_text = corrected_sentence
-
-            highest_similarity_score, average_similarity_score, too_similar_bool, list_overly_similar_phrases = check_similarity(
-                input_text, output_text, Config.SIMILARITY_WINDOW, Config.SIMILARITY_THRESHOLD)
-
-            print(f"[{Fore.YELLOW}SIMILARITY ANALYSIS{Style.RESET_ALL}]")
-            print(f"    Window size: {Fore.LIGHTCYAN_EX}{Config.SIMILARITY_WINDOW}{Style.RESET_ALL} words")
-            print(f"    Similarity threshold: {Fore.LIGHTCYAN_EX}{Config.SIMILARITY_THRESHOLD}{Style.RESET_ALL}")
-
-            if too_similar_bool == False:
-                print(f"    Average similarity score: {Fore.GREEN}{average_similarity_score:.2f}{Style.RESET_ALL}")
-                print(f"    Highest similarity score: {Fore.GREEN}{highest_similarity_score:.2f}{Style.RESET_ALL}")
-
-            if too_similar_bool == True:
-
-                print(
-                    f"    Average exceeding similarity score: {Fore.RED}{average_similarity_score:.2f}{Style.RESET_ALL}")
-                print(
-                    f"    Highest exceeding similarity score: {Fore.RED}{highest_similarity_score:.2f}{Style.RESET_ALL}")
-
-                # Create a string with list elements on separate lines, indented by four spaces
-                formatted_list = '\n        '.join(list_overly_similar_phrases)
-
-                print(
-                    f"    Output text is too similar to these phrases:\n        {Fore.RED}{formatted_list}{Style.RESET_ALL}")
-
-            else:
-
-                print(f"    {Fore.GREEN}Output text is adequately dissimilar.{Style.RESET_ALL}")
-
-            # Sleep for a second to give the API call time to finish
-            # so that this log message doesn't print below the final output
-            time.sleep(1)
+        print_similarity_check(TRAINING_CORPUS, corrected_sentence, similarity_check)
 
         if corrected_sentence:
 
@@ -156,6 +120,46 @@ def make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, simil
 
         logger.error(f"Error: API call failed with status code {response.status_code}.")
         logger.error(f"Response: {response.text}")
+
+
+def print_similarity_check(TRAINING_CORPUS, corrected_sentence, similarity_check):
+    if similarity_check:
+
+        # TODO: How to pass reference without calling this again?
+        input_text = return_corpus_text(TRAINING_CORPUS)
+        output_text = corrected_sentence
+
+        highest_similarity_score, average_similarity_score, too_similar_bool, list_overly_similar_phrases = check_similarity(
+            input_text, output_text, Config.SIMILARITY_WINDOW, Config.SIMILARITY_THRESHOLD)
+
+        print(f"[{Fore.YELLOW}SIMILARITY ANALYSIS{Style.RESET_ALL}]")
+        print(f"    Window size: {Fore.LIGHTCYAN_EX}{Config.SIMILARITY_WINDOW}{Style.RESET_ALL} words")
+        print(f"    Similarity threshold: {Fore.LIGHTCYAN_EX}{Config.SIMILARITY_THRESHOLD}{Style.RESET_ALL}")
+
+        if too_similar_bool == False:
+            print(f"    Average similarity score: {Fore.GREEN}{average_similarity_score:.2f}{Style.RESET_ALL}")
+            print(f"    Highest similarity score: {Fore.GREEN}{highest_similarity_score:.2f}{Style.RESET_ALL}")
+
+        if too_similar_bool == True:
+
+            print(
+                f"    Average exceeding similarity score: {Fore.RED}{average_similarity_score:.2f}{Style.RESET_ALL}")
+            print(
+                f"    Highest exceeding similarity score: {Fore.RED}{highest_similarity_score:.2f}{Style.RESET_ALL}")
+
+            # Create a string with list elements on separate lines, indented by four spaces
+            formatted_list = '\n        '.join(list_overly_similar_phrases)
+
+            print(
+                f"    Output text is too similar to these phrases:\n        {Fore.RED}{formatted_list}{Style.RESET_ALL}")
+
+        else:
+
+            print(f"    {Fore.GREEN}Output text is adequately dissimilar.{Style.RESET_ALL}")
+
+        # Sleep for a second to give the API call time to finish
+        # so that this log message doesn't print below the final output
+        time.sleep(1)
 
 
 def print_verbose_api_request(data):
