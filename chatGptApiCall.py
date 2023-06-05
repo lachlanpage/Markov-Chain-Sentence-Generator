@@ -25,14 +25,13 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
     # If the user specified a training corpus, use that. Otherwise, use the default.
     if input_file is not None:
 
-        # TODO: Test this. It might need to be Config.TRAINING_CORPUS_PATH
-        TRAINING_CORPUS = input_file
+        training_corpus = input_file
 
     else:
 
-        TRAINING_CORPUS = Config.TRAINING_CORPUS
+        training_corpus = Config.TRAINING_CORPUS
 
-    raw_markov_result_string = generate_text(TRAINING_CORPUS, Config.MARKOV_ORDER, Config.RESULT_LENGTH, seed_words)
+    raw_markov_result_string = generate_text(training_corpus, Config.MARKOV_ORDER, Config.RESULT_LENGTH, seed_words)
 
     # Convert the word list to a string
     sentence = convert_word_list_to_string(raw_markov_result_string)
@@ -42,15 +41,15 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
 
     print_verbose_api_request(data) if Config.VERBOSE else None
 
-    make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, similarity_check)
+    make_api_request(training_corpus, data, headers, raw_markov, sentence, similarity_check)
 
 
-def make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, similarity_check):
+def make_api_request(training_corpus, data, headers, raw_markov, sentence, similarity_check):
     """
     Sends a POST request to the OpenAI API, processes the response and prints various outputs and analysis.
 
     Args:
-    TRAINING_CORPUS (list): A corpus used for training.
+    training_corpus (list): A corpus used for training.
     data (dict): The request payload containing prompt and other parameters.
     headers (dict): The request headers containing API key.
     raw_markov (bool): If True, prints raw Markov chain generated input.
@@ -87,7 +86,7 @@ def make_api_request(TRAINING_CORPUS, data, headers, raw_markov, sentence, simil
 
             corrected_sentence = response.json().get("choices", [{}])[0].get("text", "").strip()
 
-        print_similarity_check(TRAINING_CORPUS, corrected_sentence, similarity_check)
+        print_similarity_check(training_corpus, corrected_sentence, similarity_check)
 
         print_corrected_sentence(corrected_sentence, raw_markov, response, sentence)
     else:
