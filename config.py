@@ -14,6 +14,17 @@ class Config:
     # higher-order Markov models capture more context, leading to more coherent and contextually accurate generated
     # sequences. For second order Markov set this to 2. Any higher and results can approach verbatim excerpts. Any lower
     # and it becomes less coherent.
+    #
+    # A note about "overfitting". Overfitting in this context means that the Markov model may learn the training
+    # corpus too well, resulting in output text that closely resembles or repeats sequences directly from the
+    # training data. This can be an issue because the goal is to generate diverse and creative text based on the
+    # patterns learned from the training data, rather than simply reproducing the training data. In other words,
+    # an overfitted model will have low generalization capability, meaning it performs well on the training data but
+    # poorly on new, previously unseen data. Lower order models are less susceptible to overfitting since they
+    # capture less context, making it more challenging for them to reproduce long, verbatim quotes from the training
+    # corpus. However, higher order models, if not trained with enough data, can easily capture very specific
+    # sequences from the training data and reproduce them in the generated text. That's why it's essential to strike
+    # a balance between context capture and avoiding overfitting.
     MARKOV_ORDER = 2
 
     # Set how long of a sentence or paragraph you want in the resulting text.
