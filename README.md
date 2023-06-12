@@ -89,7 +89,7 @@ python chatGptApiCall.py
 ```shell
 $ python mimic.py -h
 usage: mimic.py [-h] [-i INPUT_FILE] [-r] [-sc] [-sw SEED_WORDS] [-v] [-q] [-l LENGTH] [-m MAX_TOKENS] [-st SIMILARITY_THRESHOLD]
-                [-w SIMILARITY_WINDOW] [-n NUMBER_OF_RESPONSES]
+                [-w SIMILARITY_WINDOW] [-n NUMBER_OF_RESPONSES] [-temp TEMPERATURE]
 
 A command line tool to generate random phrases that imitate a literary style based on a training text.
 
@@ -115,6 +115,8 @@ options:
   -n NUMBER_OF_RESPONSES, --number_of_responses NUMBER_OF_RESPONSES
                         Number of responses to generate. Higher number also increases temperature and increases likelihood of
                         repetition(optional)
+  -temp TEMPERATURE, --temperature TEMPERATURE
+                        Specify the AI temperature (creativity). Float between 0 and 2.0.
 ```
 
 # Signing up for a ChatGPT-4 API key
