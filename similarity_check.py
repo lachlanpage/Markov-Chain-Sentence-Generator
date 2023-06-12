@@ -38,7 +38,7 @@ def check_similarity(input_text, output_text, window_size, similarity_threshold)
     :rtype: Tuple[float, float, bool, list]
     """
 
-    # Split texts into words
+     # Split texts into words
     input_words = input_text.split()
     output_words = output_text.split()
 
