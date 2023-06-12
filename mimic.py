@@ -47,6 +47,7 @@ def parse_args():
     parser.add_argument("-n", "--number_of_responses",
                         help="Number of responses to generate. Higher number also increases temperature and increases likelihood of repetition(optional)",
                         default=Config.NUM_OF_RESPONSES)
+    parser.add_argument("-temp", "--temperature", help="Specify the AI temperature (creativity). Float between 0 and 2.0.")
 
     # TODO:  Add the optional test argument
     # parser.add_argument("-t", "--test", action="store_true", help="Test the API call")
@@ -80,7 +81,9 @@ def main():
     # 1 token ~= 0.75 of a word, or about 4 characters
     Config.MAX_TOKENS = int(Config.RESULT_LENGTH * (4 / 3))
 
-    # print(args.max_tokens)
+    # If the user specified a temperature value, update the config
+    if args.temperature:
+        Config.TEMPERATURE = float(args.temperature)
 
     # But if the user specified a max_tokens value, update the config
     if int(args.max_tokens) > Config.RESULT_LENGTH:
