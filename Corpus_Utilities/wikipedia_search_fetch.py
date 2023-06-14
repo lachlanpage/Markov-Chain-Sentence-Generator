@@ -1,5 +1,7 @@
 import re
 import wikipedia
+from wikipedia.exceptions import DisambiguationError, PageError
+
 
 def clean_text(text):
     # Remove URLs
@@ -24,10 +26,17 @@ search_query = input("Enter the search query: ")
 file_name = search_query.replace(' ', '_').lower()
 
 # Add the "wikipedia_" prefix and ".txt" extension
-file_name = f"wikipedia_{file_name}.txt"
+file_name = f"Training_Corpora/wikipedia_{file_name}.txt"
 
 wikipedia.set_lang("en")
-page = wikipedia.page(search_query)
+
+try:
+    page = wikipedia.page(search_query)
+except DisambiguationError as de:
+    print(f"Disambiguation error: multiple pages match the query '{search_query}'. Suggestions: {de.options}")
+except PageError:
+    print(f"Page error: no Wikipedia page found for query '{search_query}'")
+
 raw_content = page.content
 clean_content = clean_text(raw_content)
 

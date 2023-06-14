@@ -7,7 +7,7 @@ class Config:
     QUIET = False
 
     # The text to use for training the Markov model.
-    TRAINING_CORPUS = "Training_Texts/heartOfDarkness.txt"
+    TRAINING_CORPUS = "Training_Corpora/heartOfDarkness.txt"
 
     # TODO: Create a command line option to specify the Markov order
     # Which order of Markov model, or how many words to look backwards when predicting the next word. Generally,
