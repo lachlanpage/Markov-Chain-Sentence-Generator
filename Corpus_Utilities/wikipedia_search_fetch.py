@@ -17,7 +17,8 @@ def clean_text(text):
     return text
 
 # TODO: Replace this with the actual user input
-search_query = "Watergate scandal"  # Replace this with the actual user input
+# search_query = "Watergate scandal"  # Replace this with the actual user input
+search_query = input("Enter the search query: ")
 
 # Replace spaces with underscores and use lower case
 file_name = search_query.replace(' ', '_').lower()
