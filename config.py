@@ -30,10 +30,9 @@ class Config:
     # Set how long of a sentence or paragraph you want in the resulting text.
     RESULT_LENGTH = 30
 
-    # Adjust the temperature with --temp or --temperature.
-    # Set how creative or determinative you want ChatGPT to be when cleaning up the sentence. The "temperature" parameter
-    # Set a float between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2
-    # will make it more focused and deterministic.
+    # Adjust the temperature with --temp or --temperature. Set how creative or determinative you want ChatGPT to be
+    # when cleaning up the sentence. The "temperature" parameter Set a float between 0 and 2. Higher values like 0.8
+    # will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
     TEMPERATURE = 0.7
 
     # Set the maximum number of tokens to generate in the ChatGPT API response.

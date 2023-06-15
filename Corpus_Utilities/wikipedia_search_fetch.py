@@ -1,5 +1,6 @@
 import re
 import wikipedia
+from wikipedia import WikipediaPage
 from wikipedia.exceptions import DisambiguationError, PageError
 
 
@@ -18,6 +19,7 @@ def clean_text(text):
 
     return text
 
+
 # TODO: Replace this with the actual user input
 # search_query = "Watergate scandal"  # Replace this with the actual user input
 search_query = input("Enter the search query: ")
@@ -30,12 +32,19 @@ file_name = f"Training_Corpora/wikipedia_{file_name}.txt"
 
 wikipedia.set_lang("en")
 
+page = None
+
 try:
     page = wikipedia.page(search_query)
 except DisambiguationError as de:
     print(f"Disambiguation error: multiple pages match the query '{search_query}'. Suggestions: {de.options}")
+    exit(1)
 except PageError:
-    print(f"Page error: no Wikipedia page found for query '{search_query}'")
+    print(f"Page error: no Wikipedia page found for the query '{search_query}'")
+    exit(1)
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+    exit(1)
 
 raw_content = page.content
 clean_content = clean_text(raw_content)
