@@ -3,6 +3,10 @@ from colorama import init, Fore, Style
 from log_config import configure_logger
 from config import Config
 
+# Initialize colorama
+init(autoreset=True)
+
+
 class TextGenerator:
 
     # This class is used to generate text from a given corpus file.
@@ -13,11 +17,33 @@ class TextGenerator:
         self.logger = configure_logger(__name__)
         init(autoreset=True)
 
-    # This method is used to return the text from a given corpus file.
+    # This method is used to return the text from a given corpus file. The corpus file should be in UTF-8 format. But
+    # Combining both the errors='replace' parameter and the try/except block provides more robust error handling for
+    # various issues that may arise when working with input files.
     def return_corpus_text(self, corpus_file_name):
-        with open(corpus_file_name, 'r') as content_file:
-            corpus_as_string = content_file.read()
-        return corpus_as_string
+        """
+               Reads the content of a corpus file and returns it as a string.
+
+               Args:
+                   corpus_file_name (str): The path of the corpus file to be read.
+
+               Returns:
+                   str: The content of the corpus file as a string. If an error occurs while reading the file,
+                        an empty string is returned and an error message is printed.
+
+               Raises:
+                   None
+               """
+        try:
+            with open(corpus_file_name, encoding='utf-8', errors='replace') as content_file:
+                corpus_as_string = content_file.read()
+
+            return corpus_as_string
+
+        except Exception as e:
+
+            print(f"{Fore.RED}[-] Error while reading the corpus file '{corpus_file_name}': {e}{Style.RESET_ALL}")
+            return ""
 
     #  This method is used to convert the list of words into a string from a given corpus file.
     def convert_word_list_to_string(self, final_output_word_list):
@@ -56,7 +82,7 @@ class TextGenerator:
             if seq not in chain:
                 chain[seq] = []
             chain[seq].append(corpus_as_string[i + prefix_length] if i + prefix_length < len(corpus_as_string) else '.')
-        start_seq = None
+        # start_seq = None
         if seed_words is not None:
             start_seq = tuple(seed_words.split())
         else:
