@@ -8,6 +8,7 @@ from pygments.formatters import TerminalFormatter
 from pygments.lexers import JsonLexer
 from config import Config
 from log_config import configure_logger
+from pdf_utilities import extract_pdf_text
 from similarity_check import check_similarity
 from text_utilities import TextGenerator
 
@@ -23,13 +24,32 @@ init(autoreset=True)
 
 def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_check=False, seed_words=None):
     # If the user specified a training corpus, use that. Otherwise, use the default.
-    if input_file is not None:
+    try:
+        if input_file is not None:
 
-        training_corpus = input_file
+            # If the user specified a PDF file, extract the text from it.
+            if input_file.lower().endswith('.pdf'):
 
-    else:
+                # Extract the text from the PDF file.
+                training_corpus = extract_pdf_text(input_file)
 
-        training_corpus = Config.TRAINING_CORPUS
+            # Otherwise, use the user-specified .txt file.
+            elif input_file.lower().endswith('.txt'):
+
+                training_corpus = input_file
+
+        else:
+
+            # If the user did not specify a training corpus, use the default.
+            training_corpus = Config.TRAINING_CORPUS
+
+    except FileNotFoundError:
+        print(f"File not found: '{input_file}'")
+        exit(1)
+
+    except IOError as e:
+        print(f"IOError occurred while reading the file '{input_file}': {e}")
+        exit(1)
 
     raw_markov_result_string = text_generator.generate_text(
         training_corpus, Config.MARKOV_ORDER, Config.RESULT_LENGTH, seed_words)
