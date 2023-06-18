@@ -31,7 +31,9 @@ def call_openai_api(max_tokens, input_file_name=None, raw_markov=False, similari
             # If the user specified a PDF file, extract the text from it.
             if input_file_name.lower().endswith('.pdf'):
 
-                print(f"{Fore.GREEN}[+] Extracting text from '{input_file_name}'{Style.RESET_ALL}")
+                # Use the VERBOSE and QUIET flags from the Config class
+                if Config.VERBOSE:
+                    print(f"{Fore.GREEN}[+] Extracting text from '{input_file_name}'{Style.RESET_ALL}")
 
                 # Extract the text from the PDF file.
                 input_file_name = convert_pdf_to_text_file(input_file_name)
@@ -55,7 +57,9 @@ def call_openai_api(max_tokens, input_file_name=None, raw_markov=False, similari
         print(f"IOError occurred while reading the file '{input_file_name}': {e}")
         exit(1)
 
-    print(f"{Fore.GREEN}[+] Using training corpus: '{input_file_name}'{Style.RESET_ALL}")
+    # Use the VERBOSE and QUIET flags from the Config class
+    if Config.VERBOSE:
+        print(f"{Fore.GREEN}[+] Using training corpus: '{input_file_name}'{Style.RESET_ALL}")
 
     raw_markov_result_string = text_generator.generate_text(
         input_file_name, Config.MARKOV_ORDER, Config.RESULT_LENGTH, seed_words)

@@ -1,6 +1,8 @@
 import PyPDF4
 from colorama import Fore, Style
 
+from config import Config
+
 
 def extract_pdf_text(pdf_file_path):
     """
@@ -48,6 +50,8 @@ def convert_pdf_to_text_file(pdf_file_path):
 
         text_file.write(extract_pdf_text(pdf_file_path))
 
-        print(f"{Fore.GREEN}[+] Saved the training corpus to '{text_file_path}'{Style.RESET_ALL}.")
+        # Use the VERBOSE and QUIET flags from the Config class
+        if Config.VERBOSE:
+            print(f"{Fore.GREEN}[+] Saved the training corpus to '{text_file_path}'{Style.RESET_ALL}.")
 
     return text_file_path
