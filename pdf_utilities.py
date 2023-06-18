@@ -3,6 +3,18 @@ from colorama import Fore, Style
 
 
 def extract_pdf_text(pdf_file_path):
+    """
+    Extracts text from a given PDF file and returns it as a single string.
+
+    Args:
+        pdf_file_path (str): The path of the PDF file to extract text from.
+
+    Returns:
+        str: The extracted text from the PDF file as a single string.
+
+    Raises:
+        Exception: Any exceptions raised during PDF file opening or text extraction will propagate.
+    """
     with open(pdf_file_path, 'rb') as pdf_file:
         pdf_reader = PyPDF4.PdfFileReader(pdf_file)
         pdf_text = []
@@ -13,10 +25,22 @@ def extract_pdf_text(pdf_file_path):
 
     return "".join(pdf_text)
 
-# TODO: implement the extract_pdf_text function in mimic.py with --input-file
+
 
 def convert_pdf_to_text_file(pdf_file_path):
+    """
+    Extracts text from a given PDF file, saves the extracted text to a new text file,
+    and returns the path to the newly created text file.
 
+    Args:
+        pdf_file_path (str): The path of the PDF file to be converted to text.
+
+    Returns:
+        str: The path of the new text file containing the extracted text from the PDF.
+
+    Raises:
+        Exception: Any exceptions raised during text extraction or file writing will propagate.
+    """
     # Save the text to a file with the same name as the PDF file, but with a .txt extension.
     text_file_path = pdf_file_path.replace('.pdf', '.txt')
 

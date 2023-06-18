@@ -13,7 +13,7 @@ def parse_args():
     # Add arguments
     # Add the optional input file argument
     parser.add_argument("-i", "--input-file",
-                        help="Path to the input file a.k.a the training text (optional)",
+                        help="Path to the input file. .txt or .pdf (optional)",
                         default=Config.TRAINING_CORPUS)
     # TODO: Create a command line option to specify a directory containing several related text files.
     parser.add_argument("-r", "--raw-markov",
