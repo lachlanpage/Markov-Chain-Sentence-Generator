@@ -1,8 +1,10 @@
-import PyPDF2
+import PyPDF4
+from colorama import Fore, Style
 
-def extract_pdf_text(file_path):
-    with open(file_path, 'rb') as pdf_file:
-        pdf_reader = PyPDF2.PdfFileReader(pdf_file)
+
+def extract_pdf_text(pdf_file_path):
+    with open(pdf_file_path, 'rb') as pdf_file:
+        pdf_reader = PyPDF4.PdfFileReader(pdf_file)
         pdf_text = []
 
         for page_num in range(pdf_reader.numPages):
@@ -13,13 +15,15 @@ def extract_pdf_text(file_path):
 
 # TODO: implement the extract_pdf_text function in mimic.py with --input-file
 
-input_file = 'path/to/your/input-file.pdf'  # Replace this with the --input-file argument
+def convert_pdf_to_text_file(pdf_file_path):
 
-if input_file.lower().endswith('.pdf'):
-    training_corpus = extract_pdf_text(input_file)
-else:
-    # Read the file contents and process non-PDF files as usual
-    with open(input_file, 'r', encoding='utf-8', errors='replace') as content_file:
-        training_corpus = content_file.read()
+    # Save the text to a file with the same name as the PDF file, but with a .txt extension.
+    text_file_path = pdf_file_path.replace('.pdf', '.txt')
 
-# Use `training_corpus` as a training corpus for your model
+    with open(text_file_path, 'w', encoding='utf-8', ) as text_file:
+
+        text_file.write(extract_pdf_text(pdf_file_path))
+
+        print(f"{Fore.GREEN}[+] Saved the training corpus to '{text_file_path}'{Style.RESET_ALL}.")
+
+    return text_file_path
