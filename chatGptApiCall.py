@@ -8,6 +8,7 @@ from pygments.formatters import TerminalFormatter
 from pygments.lexers import JsonLexer
 from config import Config
 from log_config import configure_logger
+from pdf_utilities import convert_pdf_to_text_file
 from similarity_check import check_similarity
 from text_utilities import TextGenerator
 
@@ -21,18 +22,43 @@ logger = configure_logger(__name__)
 init(autoreset=True)
 
 
-def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_check=False, seed_words=None):
+def call_openai_api(max_tokens, input_file_name=None, raw_markov=False, similarity_check=False, seed_words=None):
+
     # If the user specified a training corpus, use that. Otherwise, use the default.
-    if input_file is not None:
+    try:
+        if input_file_name is not None:
 
-        training_corpus = input_file
+            # If the user specified a PDF file, extract the text from it.
+            if input_file_name.lower().endswith('.pdf'):
 
-    else:
+                print(f"{Fore.GREEN}[+] Extracting text from '{input_file_name}'{Style.RESET_ALL}")
 
-        training_corpus = Config.TRAINING_CORPUS
+                # Extract the text from the PDF file.
+                input_file_name = convert_pdf_to_text_file(input_file_name)
+
+            # Otherwise, use the user-specified .txt file.
+            elif input_file_name.lower().endswith('.txt'):
+
+                # training_corpus = input_file_name
+                pass
+
+        else:
+
+            # If the user did not specify a training corpus, use the default.
+            input_file_name = Config.TRAINING_CORPUS
+
+    except FileNotFoundError:
+        print(f"File not found: '{input_file_name}'")
+        exit(1)
+
+    except IOError as e:
+        print(f"IOError occurred while reading the file '{input_file_name}': {e}")
+        exit(1)
+
+    print(f"{Fore.GREEN}[+] Using training corpus: '{input_file_name}'{Style.RESET_ALL}")
 
     raw_markov_result_string = text_generator.generate_text(
-        training_corpus, Config.MARKOV_ORDER, Config.RESULT_LENGTH, seed_words)
+        input_file_name, Config.MARKOV_ORDER, Config.RESULT_LENGTH, seed_words)
 
     # Convert the word list to a string
     sentence = text_generator.convert_word_list_to_string(raw_markov_result_string)
@@ -42,7 +68,7 @@ def call_openai_api(max_tokens, input_file=None, raw_markov=False, similarity_ch
 
     print_verbose_api_request(data) if Config.VERBOSE else None
 
-    make_api_request(training_corpus, data, headers, raw_markov, sentence, similarity_check)
+    make_api_request(input_file_name, data, headers, raw_markov, sentence, similarity_check)
 
 
 def make_api_request(training_corpus, data, headers, raw_markov, sentence, similarity_check):
