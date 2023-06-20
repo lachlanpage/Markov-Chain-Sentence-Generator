@@ -156,14 +156,17 @@ def print_corrected_sentence(corrected_sentence, raw_markov, response, sentence)
         logger.error("Error: Could not extract the corrected sentence.")
 
 
-def print_similarity_check(TRAINING_CORPUS, corrected_sentence, similarity_check):
+def print_similarity_check(training_corpus, corrected_sentence, similarity_check):
     if similarity_check:
 
         # TODO: How to pass reference without calling this again?
-        input_text = text_generator.return_corpus_text(TRAINING_CORPUS)
+        input_text = text_generator.return_corpus_text(training_corpus)
         output_text = corrected_sentence
 
-        highest_similarity_score, average_similarity_score, too_similar_bool, list_overly_similar_phrases = check_similarity(
+        (highest_similarity_score,
+         average_similarity_score,
+         too_similar_bool,
+         list_overly_similar_phrases) = check_similarity(
             input_text, output_text, Config.SIMILARITY_WINDOW, Config.SIMILARITY_THRESHOLD)
 
         print(f"[{Fore.YELLOW}SIMILARITY ANALYSIS{Style.RESET_ALL}]")
@@ -185,7 +188,8 @@ def print_similarity_check(TRAINING_CORPUS, corrected_sentence, similarity_check
             formatted_list = '\n        '.join(list_overly_similar_phrases)
 
             print(
-                f"    Output text is too similar to these phrases:\n        {Fore.RED}{formatted_list}{Style.RESET_ALL}")
+                f"    Output text is too similar to these phrases:\n        "
+                f"{Fore.RED}{formatted_list}{Style.RESET_ALL}")
 
         else:
 
@@ -227,8 +231,8 @@ def setup_api_request(max_tokens, sentence):
     data = {
         "model": "text-davinci-003",
         "prompt": "The following sentence may be missing something: \"" + sentence + "\". "
-                                                                                     "Please make the sentence make more sense"
-                                                                                     "And don't return anything but a single sentence. I only want to see one version of the sentence.",
+        "Please make the sentence make more sense. "
+        "And don't return anything but a single sentence. I only want to see one version of the sentence.",
         "temperature": Config.TEMPERATURE,
         "max_tokens": max_tokens,
         "n": Config.NUM_OF_RESPONSES,
