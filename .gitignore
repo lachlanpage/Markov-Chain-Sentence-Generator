@@ -1,4 +1,7 @@
-__pychache__
-__pychache__/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 .idea/
 venv/
+.DS_Store
