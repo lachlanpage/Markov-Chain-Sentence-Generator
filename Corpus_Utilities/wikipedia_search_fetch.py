@@ -6,6 +6,7 @@ from colorama import init, Fore, Style
 # Initialize colorama
 init(autoreset=True)
 
+
 def clean_up_text(text):
     # Remove URLs
     text = re.sub(r'http\S+', '', text)
@@ -21,6 +22,7 @@ def clean_up_text(text):
     text = re.sub(r'^\s*$', '', text, flags=re.MULTILINE)
 
     return text
+
 
 #  Get the search query from the user
 search_query = input("Enter the search query: ")
@@ -44,7 +46,8 @@ try:
 
 except DisambiguationError as de:
 
-    print(f"{Fore.RED}[-] Disambiguation error: multiple pages match the query '{search_query}'. Suggestions: {de.options}{Style.RESET_ALL}")
+    print(f"{Fore.RED}[-] Disambiguation error: multiple pages match the query '{search_query}'. "
+          f"Suggestions: {de.options}{Style.RESET_ALL}")
     exit(1)
 
 except PageError:

@@ -68,7 +68,7 @@ often convincingly authentic sounding compared with the original text.
 
 You need to be using Python 3.x. 
 
-```commandline
+```shell
 # Clone the repo
 git clone https://github.com/tcpiplab/Literary-style-imitation-using-Markov-chains-and-the-ChatGPT-4-API.git
 cd Literary-style-imitation-using-Markov-chains-and-the-ChatGPT-4-API

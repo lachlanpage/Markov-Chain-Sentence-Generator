@@ -28,7 +28,6 @@ def extract_pdf_text(pdf_file_path):
     return "".join(pdf_text)
 
 
-
 def convert_pdf_to_text_file(pdf_file_path):
     """
     Extracts text from a given PDF file, saves the extracted text to a new text file,

@@ -3,3 +3,4 @@ coloredlogs~=15.0.1
 colorama~=0.4.6
 Pygments~=2.15.1
 wikipedia~=1.4.0
+PyPDF4~=1.27.0

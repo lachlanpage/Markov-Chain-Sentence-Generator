@@ -8,7 +8,8 @@ from log_config import configure_logger
 def parse_args():
     # Create the argument parser
     parser = argparse.ArgumentParser(
-        description="A command line tool to generate random phrases that imitate a literary style based on a training text.")
+        description="A command line tool to generate random phrases that imitate a literary style based on a training "
+                    "text.")
 
     # Add arguments
     # Add the optional input file argument
@@ -43,14 +44,18 @@ def parse_args():
                         help="Floating point similarity threshold for the similarity check (optional)",
                         default=Config.SIMILARITY_THRESHOLD)
     parser.add_argument("-w", "--similarity-window",
-                        help="Number of consecutive words in the sliding window used for the similarity check (optional)",
+                        help="Number of consecutive words in the sliding window used for the similarity check ("
+                             "optional)",
                         default=Config.SIMILARITY_WINDOW)
     parser.add_argument("-n", "--number_of_responses",
-                        help="Number of responses to generate. Higher number also increases temperature and increases likelihood of repetition(optional)",
+                        help="Number of responses to generate. Higher number also increases temperature and increases "
+                             "likelihood of repetition(optional)",
                         default=Config.NUM_OF_RESPONSES)
-    parser.add_argument("-temp", "--temperature", help="Specify the AI temperature (creativity). Float between 0 and 2.0.")
+    parser.add_argument("-temp", "--temperature", help="Specify the AI temperature (creativity). Float between 0 and "
+                                                       "2.0.")
 
-    # TODO:  Add the optional test argument
+    # TODO: Add an option for sentiment analysis
+    # TODO: Add an optional test argument to test the API call
     # parser.add_argument("-t", "--test", action="store_true", help="Test the API call")
 
     return parser.parse_args()

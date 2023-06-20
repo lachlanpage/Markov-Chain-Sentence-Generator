@@ -38,7 +38,7 @@ def check_similarity(input_text, output_text, window_size, similarity_threshold)
     :rtype: Tuple[float, float, bool, list]
     """
 
-     # Split texts into words
+    # Split texts into words
     input_words = input_text.split()
     output_words = output_text.split()
 
@@ -91,7 +91,8 @@ def check_similarity(input_text, output_text, window_size, similarity_threshold)
 
         return highest_similarity_score, average_similarity_score, True, overly_similar_phrases
 
-    # Return the highest and average similarity scores, and a flag indicating output is not too similar to the original text.
+    # Return the highest and average similarity scores, and a flag indicating output is not too similar to the
+    # original text.
     return highest_similarity_score, average_similarity_score, False, overly_similar_phrases
 
 
