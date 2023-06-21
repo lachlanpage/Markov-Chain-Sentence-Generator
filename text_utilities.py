@@ -9,7 +9,7 @@ init(autoreset=True)
 
 class TextGenerator:
 
-    # This class is used to generate text from a given corpus file.
+    # This class is used to generate training_corpus_filename from a given corpus file.
 
     # Initializes the class by configuring a logger with the current module's name
     # and enabling auto-reset for the terminal color output.
@@ -17,7 +17,7 @@ class TextGenerator:
         self.logger = configure_logger(__name__)
         init(autoreset=True)
 
-    # This method is used to return the text from a given corpus file. The corpus file should be in UTF-8 format. But
+    # This method is used to return the training_corpus_filename from a given corpus file. The corpus file should be in UTF-8 format. But
     # Combining both the errors='replace' parameter and the try/except block provides more robust error handling for
     # various issues that may arise when working with input files.
     @staticmethod

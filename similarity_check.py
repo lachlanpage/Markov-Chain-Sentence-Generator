@@ -7,7 +7,7 @@ logger = configure_logger(__name__)
 
 # Use a sliding window approach along with a sequence matching
 # technique to check if the generated output is similar to any part of the input
-# text (the entire corpus). Use Python's difflib.SequenceMatcher.
+# training_corpus_filename (the entire corpus). Use Python's difflib.SequenceMatcher.
 
 
 def get_corpus_string(corpus_as_string):
@@ -16,7 +16,7 @@ def get_corpus_string(corpus_as_string):
     Useful for importing the corpus from another Python file that already converted it to a string.
 
     Args:
-        corpus_as_string (str): A string representing a text corpus.
+        corpus_as_string (str): A string representing a training_corpus_filename corpus.
 
     Returns:
         str: The same input string.
@@ -26,7 +26,7 @@ def get_corpus_string(corpus_as_string):
 
 def check_similarity(input_text, output_text, window_size, similarity_threshold) -> Tuple[float, float, bool, list]:
     """
-    Check if the generated output is similar to any part of the input text (the entire novel).
+    Check if the generated output is similar to any part of the input training_corpus_filename (the entire novel).
     One possible approach is using Python's difflib.SequenceMatcher:
 
     :param input_text:
@@ -42,7 +42,7 @@ def check_similarity(input_text, output_text, window_size, similarity_threshold)
     input_words = input_text.split()
     output_words = output_text.split()
 
-    # Check if output text is shorter than the window size
+    # Check if output training_corpus_filename is shorter than the window size
     if len(output_words) < window_size:
         window_size = len(output_words)
 
@@ -60,7 +60,7 @@ def check_similarity(input_text, output_text, window_size, similarity_threshold)
     # Initialize an empty list to store phrases
     overly_similar_phrases = []
 
-    # Iterate through input text using a sliding window of size window_size
+    # Iterate through input training_corpus_filename using a sliding window of size window_size
     for i in range(len(input_words) - window_size + 1):
         current_window = input_words[i:i + window_size]
         matcher.set_seq2(current_window)
@@ -81,7 +81,7 @@ def check_similarity(input_text, output_text, window_size, similarity_threshold)
 
             # Add the current phrase to the list of overly similar phrases
             overly_similar_phrases.append(current_phrase)
-            # now we have a list of phrases that are too similar to the original text
+            # now we have a list of phrases that are too similar to the original training_corpus_filename
 
     # Compute the average similarity score
     average_similarity_score = sum_similarity_score / count_similarity_score
@@ -92,7 +92,7 @@ def check_similarity(input_text, output_text, window_size, similarity_threshold)
         return highest_similarity_score, average_similarity_score, True, overly_similar_phrases
 
     # Return the highest and average similarity scores, and a flag indicating output is not too similar to the
-    # original text.
+    # original training_corpus_filename.
     return highest_similarity_score, average_similarity_score, False, overly_similar_phrases
 
 

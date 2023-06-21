@@ -28,14 +28,14 @@ def call_openai_api(max_tokens, input_file_name=None, raw_markov=False, similari
     try:
         if input_file_name is not None:
 
-            # If the user specified a PDF file, extract the text from it.
+            # If the user specified a PDF file, extract the training_corpus_filename from it.
             if input_file_name.lower().endswith('.pdf'):
 
                 # Use the VERBOSE and QUIET flags from the Config class
                 if Config.VERBOSE:
-                    print(f"{Fore.GREEN}[+] Extracting text from '{input_file_name}'{Style.RESET_ALL}")
+                    print(f"{Fore.GREEN}[+] Extracting training_corpus_filename from '{input_file_name}'{Style.RESET_ALL}")
 
-                # Extract the text from the PDF file.
+                # Extract the training_corpus_filename from the PDF file.
                 input_file_name = convert_pdf_to_text_file(input_file_name)
 
             # Otherwise, use the user-specified .txt file.
@@ -91,7 +91,7 @@ def make_api_request(training_corpus, data, headers, raw_markov, sentence, simil
     {
         "choices": [
             {
-                "text": "<corrected_sentence>",
+                "training_corpus_filename": "<corrected_sentence>",
                 ...
             },
             ...
@@ -109,13 +109,13 @@ def make_api_request(training_corpus, data, headers, raw_markov, sentence, simil
         # Loop through and grab each response if Config.NUM_OF_RESPONSES > 1
         if Config.NUM_OF_RESPONSES > 1:
             for i in range(Config.NUM_OF_RESPONSES):
-                corrected_sentences_list.append(response.json().get("choices", [{}])[i].get("text", "").strip())
+                corrected_sentences_list.append(response.json().get("choices", [{}])[i].get("training_corpus_filename", "").strip())
 
                 corrected_sentence = corrected_sentence + corrected_sentences_list[i] + "\n\n"
 
         else:
 
-            corrected_sentence = response.json().get("choices", [{}])[0].get("text", "").strip()
+            corrected_sentence = response.json().get("choices", [{}])[0].get("training_corpus_filename", "").strip()
 
         print_similarity_check(training_corpus, corrected_sentence, similarity_check)
 
@@ -188,12 +188,12 @@ def print_similarity_check(training_corpus, corrected_sentence, similarity_check
             formatted_list = '\n        '.join(list_overly_similar_phrases)
 
             print(
-                f"    Output text is too similar to these phrases:\n        "
+                f"    Output training_corpus_filename is too similar to these phrases:\n        "
                 f"{Fore.RED}{formatted_list}{Style.RESET_ALL}")
 
         else:
 
-            print(f"    {Fore.GREEN}Output text is adequately dissimilar.{Style.RESET_ALL}")
+            print(f"    {Fore.GREEN}Output training_corpus_filename is adequately dissimilar.{Style.RESET_ALL}")
 
         # Sleep for a second to give the API call time to finish
         # so that this log message doesn't print below the final output
@@ -229,7 +229,7 @@ def setup_api_request(max_tokens, sentence):
         "Content-Type": "application/json",
     }
     data = {
-        "model": "text-davinci-003",
+        "model": "training_corpus_filename-davinci-003",
         "prompt": "The following sentence may be missing something: \"" + sentence + "\". "
         "Please make the sentence make more sense. "
         "And don't return anything but a single sentence. I only want to see one version of the sentence.",

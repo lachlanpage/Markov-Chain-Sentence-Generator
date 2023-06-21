@@ -1,5 +1,6 @@
 import argparse
 
+import sentiment_utilities
 from chatGptApiCall import call_openai_api
 from config import Config
 from log_config import configure_logger
@@ -9,23 +10,23 @@ def parse_args():
     # Create the argument parser
     parser = argparse.ArgumentParser(
         description="A command line tool to generate random phrases that imitate a literary style based on a training "
-                    "text.")
+                    "training_corpus_filename.")
 
     # Add arguments
     # Add the optional input file argument
     parser.add_argument("-i", "--input-file",
                         help="Path to the input file. .txt or .pdf (optional)",
                         default=Config.TRAINING_CORPUS)
-    # TODO: Create a command line option to specify a directory containing several related text files.
+    # TODO: Create a command line option to specify a directory containing several related training_corpus_filename files.
     parser.add_argument("-r", "--raw-markov",
                         action="store_true",
                         help="Print the raw Markov result (optional)")
     parser.add_argument("-sc", "--similarity-check",
                         action="store_true",
-                        help="Quantify how similar the output is to the original text (optional)")
+                        help="Quantify how similar the output is to the original training_corpus_filename (optional)")
     parser.add_argument("-sw", "--seed-words",
                         help="Word(s) to seed the Markov search. "
-                             "If not found in the original text, it will be prepended to the output. (optional)",
+                             "If not found in the original training_corpus_filename, it will be prepended to the output. (optional)",
                         default=None)
     parser.add_argument("-v", "--verbose",
                         action="store_true",
@@ -51,10 +52,10 @@ def parse_args():
                         help="Number of responses to generate. Higher number also increases temperature and increases "
                              "likelihood of repetition(optional)",
                         default=Config.NUM_OF_RESPONSES)
-    parser.add_argument("-temp", "--temperature", help="Specify the AI temperature (creativity). Float between 0 and "
-                                                       "2.0.")
+    parser.add_argument("-temp", "--temperature", help="Specify the AI temperature (creativity). "
+                                                       "Float between 0 and 2.0 (optional)")
+    parser.add_argument('--sentiment', action='store_true', help="Perform sentiment analysis on input data.")
 
-    # TODO: Add an option for sentiment analysis
     # TODO: Add an optional test argument to test the API call
     # parser.add_argument("-t", "--test", action="store_true", help="Test the API call")
 
@@ -86,6 +87,12 @@ def main():
     # Adjust the max_tokens value based on the length
     # 1 token ~= 0.75 of a word, or about 4 characters
     Config.MAX_TOKENS = int(Config.RESULT_LENGTH * (4 / 3))
+
+    # If  the user specified a sentiment analysis, update the config and perform sentiment analysis
+    if args.sentiment:
+        Config.SENTIMENT = True
+        sentiment_utilities.analyze_sentiment(Config.TRAINING_CORPUS)
+
 
     # If the user specified a temperature value, update the config
     if args.temperature:

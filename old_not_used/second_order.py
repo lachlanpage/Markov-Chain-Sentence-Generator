@@ -6,7 +6,7 @@ file_string = ""
 with open("bleak-house.txt", 'r') as content_file:
     file_string = content_file.read()
 
-#Fixing formatting for sampletext, this can be removed for other text sources
+#Fixing formatting for sampletext, this can be removed for other training_corpus_filename sources
 file_string = file_string.lower()
 file_string = file_string.replace("!" , " ")
 file_string = file_string.replace("." , " ")
