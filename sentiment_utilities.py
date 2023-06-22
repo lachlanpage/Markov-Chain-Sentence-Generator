@@ -2,6 +2,7 @@ from textblob import TextBlob
 from text_utilities import TextGenerator
 from colorama import Fore, Style
 from config import Config
+from graph_utilities import display_sentiment_score
 
 
 def analyze_sentiment(training_corpus_filename):
@@ -28,7 +29,7 @@ def analyze_sentiment(training_corpus_filename):
     analysis = TextBlob(corpus_string)
 
     # Return the polarity score of the analyzed the corpus text string
-    sentiment_polarity = analysis.sentiment.polarity
+    sentiment_polarity: float = analysis.sentiment.polarity
 
     # print(f"{Fore.GREEN}[+] Sentiment polarity score: {sentiment_polarity}{Style.RESET_ALL}")
 
@@ -36,6 +37,9 @@ def analyze_sentiment(training_corpus_filename):
     sentiment = interpret_sentiment(sentiment_polarity)
 
     print(f"Sentiment: {sentiment} (Polarity Score: {sentiment_polarity})")
+
+    # TODO: Add a graph of the sentiment polarity score
+    display_sentiment_score(sentiment_polarity)
 
     # TODO: Do we need to return the sentiment polarity score?
     return sentiment_polarity
