@@ -109,13 +109,13 @@ def make_api_request(training_corpus, data, headers, raw_markov, sentence, simil
         # Loop through and grab each response if Config.NUM_OF_RESPONSES > 1
         if Config.NUM_OF_RESPONSES > 1:
             for i in range(Config.NUM_OF_RESPONSES):
-                corrected_sentences_list.append(response.json().get("choices", [{}])[i].get("training_corpus_filename", "").strip())
+                corrected_sentences_list.append(response.json().get("choices", [{}])[i].get("text", "").strip())
 
                 corrected_sentence = corrected_sentence + corrected_sentences_list[i] + "\n\n"
 
         else:
 
-            corrected_sentence = response.json().get("choices", [{}])[0].get("training_corpus_filename", "").strip()
+            corrected_sentence = response.json().get("choices", [{}])[0].get("text", "").strip()
 
         print_similarity_check(training_corpus, corrected_sentence, similarity_check)
 
@@ -229,7 +229,7 @@ def setup_api_request(max_tokens, sentence):
         "Content-Type": "application/json",
     }
     data = {
-        "model": "training_corpus_filename-davinci-003",
+        "model": "text-davinci-003",
         "prompt": "The following sentence may be missing something: \"" + sentence + "\". "
         "Please make the sentence make more sense. "
         "And don't return anything but a single sentence. I only want to see one version of the sentence.",
