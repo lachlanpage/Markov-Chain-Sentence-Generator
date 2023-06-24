@@ -19,30 +19,39 @@ def analyze_sentiment(training_corpus_filename):
         Exception: Any exceptions raised during TextBlob analysis will propagate.
     """
     if Config.VERBOSE:
-
         print(f"{Fore.GREEN}[+] Analyzing sentiment of {training_corpus_filename}{Style.RESET_ALL}")
 
     # Convert the corpus text to a string and pass it to TextBlob
     corpus_string = TextGenerator.return_corpus_text(training_corpus_filename)
 
+    return analyze_sentiment_of_string(corpus_string)
+
+
+def analyze_sentiment_of_string(corpus_string):
+
     # Instantiate TextBlob and analyze sentiment
     analysis = TextBlob(corpus_string)
 
+    # print(analysis)
+
+    # Print the sentiment analysis
+    # print(f"{Fore.GREEN}[+] Sentiment analysis: {analysis.sentiment}{Style.RESET_ALL}")
+
     # Return the polarity score of the analyzed the corpus text string
     sentiment_polarity: float = analysis.sentiment.polarity
-
     # print(f"{Fore.GREEN}[+] Sentiment polarity score: {sentiment_polarity}{Style.RESET_ALL}")
-
     # sentiment_polarity = analyze_sentiment("Your input text goes here")
+
     sentiment = interpret_sentiment(sentiment_polarity)
 
     print(f"Sentiment: {sentiment} (Polarity Score: {sentiment_polarity})")
 
-    # TODO: Add a graph of the sentiment polarity score
+    # TODO: Distinguish between sentiment of corpus and output text
     display_sentiment_score(sentiment_polarity)
 
     # TODO: Do we need to return the sentiment polarity score?
     return sentiment_polarity
+
 
 def interpret_sentiment(sentiment_polarity):
     if sentiment_polarity > 0:
