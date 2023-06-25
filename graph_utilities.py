@@ -3,7 +3,21 @@ import shutil
 
 
 def display_sentiment_score(sentiment_polarity):
+    """
+    Display the sentiment polarity as a horizontal bar in the terminal.
 
+    The function scales the sentiment polarity to fit within the width of the terminal,
+    with some padding on either side. It then constructs a string representing a horizontal
+    bar, with filled '█' characters representing the scaled polarity, and empty '░' characters
+    filling in the rest of the bar. It then prints this bar to the terminal, along with the original
+    sentiment polarity value.
+
+    Parameters:
+        sentiment_polarity (float): The sentiment polarity to display, expected to be between -1 and 1.
+
+    Returns:
+        None
+    """
 
     # Get terminal width and subtract 14 for padding on each side
     bar_width = (get_terminal_width() - 14)
